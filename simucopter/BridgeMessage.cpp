@@ -1,7 +1,3 @@
-//
-// Created by icedragon on 6/8/17.
-//
-
 #include "BridgeMessage.h"
 
 using namespace SIMUCOPTER;
