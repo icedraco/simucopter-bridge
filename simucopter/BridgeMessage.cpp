@@ -15,7 +15,7 @@ size_t BridgeMessage::set_data(const void *src, size_t length) {
     return data_sz;
 }
 
-size_t BridgeMessage::get_data(void *dst, size_t maxlen) const {
+size_t BridgeMessage::load_data(void *dst, size_t maxlen) const {
     size_t len = maxlen > data_sz ? data_sz : maxlen;
     memcpy(dst, data, len);
     return len;

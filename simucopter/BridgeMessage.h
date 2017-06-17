@@ -48,7 +48,7 @@ namespace SIMUCOPTER {
          * @param maxlen buffer capacity
          * @return length that was actually copied
          */
-        size_t get_data(void* dst, size_t maxlen) const;
+        size_t load_data(void *dst, size_t maxlen) const;
 
         /**
          * Get a "reply" message instance for this message

@@ -44,7 +44,7 @@ TEST_F(TestBridgeMessage, DefaultMessageSizeIsZero) {
 
 TEST_F(TestBridgeMessage, DefaultGetDataStoresZeroBytes) {
     char buffer[1024] = "here be dragons";
-    ASSERT_EQ(0, commonMsg.get_data(buffer, 1024));
+    ASSERT_EQ(0, commonMsg.load_data(buffer, 1024));
     ASSERT_STREQ("here be dragons", buffer);
 }
 
@@ -66,7 +66,7 @@ TEST_F(TestBridgeMessage, SetDataDoesNotExceedCapacity) {
 
     char buffer[1024];
     memset(buffer, 0, 1024);
-    ASSERT_EQ(BRIDGE_MSG_DATA_CAPACITY, commonMsg.get_data(buffer, 1024));
+    ASSERT_EQ(BRIDGE_MSG_DATA_CAPACITY, commonMsg.load_data(buffer, 1024));
     ASSERT_EQ(BRIDGE_MSG_DATA_CAPACITY, strlen(buffer));
     ASSERT_TRUE(strncmp(buffer, cmp_buffer, 1024) == 0);
 }
