@@ -1,5 +1,5 @@
 //
-// Created by icedragon on 6/17/17.
+// Unit Test Case for the BridgeMessage component
 //
 
 #include <gtest/gtest.h>
@@ -22,40 +22,40 @@ namespace {
                 "sem rutrum aliquam. Fusce viverra, sapien a volutpat dapibus, libero lacus tristique lacus, " \
                 "in scelerisque ligula diam vitae justo. Donec elementum varius lectus in laoreet.";
 
-    class TestBridgeMessage : public testing::Test {
+    class TestUnitBridgeMessage : public testing::Test {
     public:
         BridgeMessage commonMsg;
-        TestBridgeMessage() : commonMsg(BridgeMessageType::REQUEST, COMMON_MSG_ID) {}
+        TestUnitBridgeMessage() : commonMsg(BridgeMessageType::REQUEST, COMMON_MSG_ID) {}
     };
 }
 
 
-TEST_F(TestBridgeMessage, MessageIdMatchesContructorArgument) {
+TEST_F(TestUnitBridgeMessage, MessageIdMatchesContructorArgument) {
     ASSERT_EQ(0x1337, BridgeMessage(BridgeMessageType::REQUEST, 0x1337).id);
 }
 
-TEST_F(TestBridgeMessage, MessageTypeMatchesContructorArgument) {
+TEST_F(TestUnitBridgeMessage, MessageTypeMatchesContructorArgument) {
     ASSERT_EQ(BridgeMessageType::REQUEST, BridgeMessage(BridgeMessageType::REQUEST, 0x1337).type);
 }
 
-TEST_F(TestBridgeMessage, DefaultMessageSizeIsZero) {
+TEST_F(TestUnitBridgeMessage, DefaultMessageSizeIsZero) {
     ASSERT_EQ(0, commonMsg.size());
 }
 
-TEST_F(TestBridgeMessage, DefaultGetDataStoresZeroBytes) {
+TEST_F(TestUnitBridgeMessage, DefaultGetDataStoresZeroBytes) {
     char buffer[1024] = "here be dragons";
     ASSERT_EQ(0, commonMsg.load_data(buffer, 1024));
     ASSERT_STREQ("here be dragons", buffer);
 }
 
-TEST_F(TestBridgeMessage, GetReplyMethodReturnsProperMessageInstance) {
+TEST_F(TestUnitBridgeMessage, GetReplyMethodReturnsProperMessageInstance) {
     BridgeMessage reply = commonMsg.get_reply();
     ASSERT_EQ(BridgeMessageType::REPLY, reply.type);
     ASSERT_EQ(commonMsg.id, reply.id);
     ASSERT_EQ(0, reply.size());
 }
 
-TEST_F(TestBridgeMessage, SetDataDoesNotExceedCapacity) {
+TEST_F(TestUnitBridgeMessage, SetDataDoesNotExceedCapacity) {
     ASSERT_GT(sizeof(LOREM), BRIDGE_MSG_DATA_CAPACITY);
     ASSERT_EQ(BRIDGE_MSG_DATA_CAPACITY, commonMsg.set_data(LOREM, sizeof(LOREM)));
     ASSERT_EQ(BRIDGE_MSG_DATA_CAPACITY, commonMsg.size());
