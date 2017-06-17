@@ -9,6 +9,7 @@
 
 using testing::Eq;
 using SIMUCOPTER::BridgeMessage;
+using SIMUCOPTER::BridgeMessageType;
 using SIMUCOPTER::BRIDGE_MSG_DATA_CAPACITY;
 
 namespace {
@@ -24,13 +25,17 @@ namespace {
     class TestBridgeMessage : public testing::Test {
     public:
         BridgeMessage commonMsg;
-        TestBridgeMessage() : commonMsg(COMMON_MSG_ID) {}
+        TestBridgeMessage() : commonMsg(BridgeMessageType::REQUEST, COMMON_MSG_ID) {}
     };
 }
 
 
 TEST_F(TestBridgeMessage, MessageIdMatchesContructorArgument) {
-    ASSERT_EQ(0x1337, BridgeMessage(0x1337).id);
+    ASSERT_EQ(0x1337, BridgeMessage(BridgeMessageType::REQUEST, 0x1337).id);
+}
+
+TEST_F(TestBridgeMessage, MessageTypeMatchesContructorArgument) {
+    ASSERT_EQ(BridgeMessageType::REQUEST, BridgeMessage(BridgeMessageType::REQUEST, 0x1337).type);
 }
 
 TEST_F(TestBridgeMessage, DefaultMessageSizeIsZero) {
@@ -41,6 +46,13 @@ TEST_F(TestBridgeMessage, DefaultGetDataStoresZeroBytes) {
     char buffer[1024] = "here be dragons";
     ASSERT_EQ(0, commonMsg.get_data(buffer, 1024));
     ASSERT_STREQ("here be dragons", buffer);
+}
+
+TEST_F(TestBridgeMessage, GetReplyMethodReturnsProperMessageInstance) {
+    BridgeMessage reply = commonMsg.get_reply();
+    ASSERT_EQ(BridgeMessageType::REPLY, reply.type);
+    ASSERT_EQ(commonMsg.id, reply.id);
+    ASSERT_EQ(0, reply.size());
 }
 
 TEST_F(TestBridgeMessage, SetDataDoesNotExceedCapacity) {
