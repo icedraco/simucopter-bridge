@@ -33,7 +33,7 @@ TEST_F(TestUnitBridgeClient, NotInitializedByDefault) {
 }
 
 TEST_F(TestUnitBridgeClient, InitSetsInitializedFlag) {
-    ASSERT_FALSE(client.is_initialized()) << "Pre-condition failed: BridgeService is already initialized!";
+    ASSERT_FALSE(client.is_initialized()) << "Pre-condition failed: BridgeClient is already initialized!";
     client.init();
     ASSERT_TRUE(client.is_initialized());
 }
