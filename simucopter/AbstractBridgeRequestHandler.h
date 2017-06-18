@@ -16,7 +16,7 @@ namespace SIMUCOPTER {
      * message, and a response message prepared for delivery. The data inside
      * that message can be tweaked as necessary before transmission.
      */
-    class BridgeRequestHandler {
+    class AbstractBridgeRequestHandler {
     public:
         /**
          * Handle an incoming BridgeMessage
