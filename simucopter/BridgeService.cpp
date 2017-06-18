@@ -16,8 +16,9 @@ void SIMUCOPTER::BridgeService::init(void) {
     }
 }
 
-void SIMUCOPTER::BridgeService::update(void) {
+bool SIMUCOPTER::BridgeService::update(void) {
     assert(is_initialized());
+    bool handled = false;
     bool flag_depleted;
 
     // handle incoming requests from Simulink getter blocks
@@ -27,10 +28,13 @@ void SIMUCOPTER::BridgeService::update(void) {
     for (int i = 0; !flag_depleted && i < MAX_MSG_PER_CYCLE; i++) {
         zmq::message_t req_msg;
         if (m_socket_requestHandler.recv(&req_msg, ZMQ_NOBLOCK)) {
-            // TODO: determine message type; discard if not a request
-            // TODO: determine message ID
-            // TODO: send to handler
-            // TODO: send response
+            BridgeMessage request = m_serializer.deserialize(req_msg);
+            assert(request.type == BridgeMessageType::REQUEST);
+
+            BridgeMessage response = request.get_reply();
+            handler(request.id).handle(request, response);
+            m_socket_requestHandler.send(m_serializer.serialize(response));
+            handled = true;
         } else {
             flag_depleted = true;
         }
@@ -44,16 +48,17 @@ void SIMUCOPTER::BridgeService::update(void) {
     for (int i = 0; !flag_depleted && i < MAX_MSG_PER_CYCLE; i++) {
         zmq::message_t cmd_msg;
         if (m_socket_cmdReceiver.recv(&cmd_msg, ZMQ_NOBLOCK)) {
-            // TODO: determine message type; discard if not a command
-            // TODO: determine message ID
-            // TODO: send command through cmdDispatcher socket
+            m_socket_cmdDispatcher.send(cmd_msg);
+            handled = true;
         } else {
             flag_depleted = true;
         }
     }
+
+    return handled;
 }
 
-SIMUCOPTER::BridgeRequestHandler* SIMUCOPTER::BridgeService::handler(int msgid) {
+SIMUCOPTER::BridgeRequestHandler& SIMUCOPTER::BridgeService::handler(int msgid) {
     auto iter = m_handlers.find(msgid);
-    return iter != m_handlers.end() ? iter->second : nullptr;
+    return iter != m_handlers.end() ? *iter->second : *default_handler();
 }

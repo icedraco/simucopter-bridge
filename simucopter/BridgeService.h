@@ -5,6 +5,7 @@
 #include <zmq.hpp>
 
 #include "BridgeRequestHandler.h"
+#include "ZmqBridgeMessageSerializer.h"
 
 
 namespace SIMUCOPTER {
@@ -15,6 +16,14 @@ namespace SIMUCOPTER {
     static const std::string ZMQ_BRIDGE_REQ_URL = "tcp://127.0.0.1:5555";
     static const std::string ZMQ_BRIDGE_CMD_URL = "tcp://127.0.0.1:5556";
     static const std::string ZMQ_BRIDGE_CMD_DISPATCH_URL = "inproc://simulink_commands";
+
+    class ZeroRequestHandler: public BridgeRequestHandler {
+    public:
+        void handle(const BridgeMessage& request, BridgeMessage& response) {
+            int zero = 0;
+            response.set_data(&zero, sizeof(zero));
+        }
+    };
 
     /**
      * This class is responsible for sitting on the server side (ArduPilot),
@@ -35,15 +44,26 @@ namespace SIMUCOPTER {
                 const std::string req_url = ZMQ_BRIDGE_REQ_URL,
                 const std::string cmd_url = ZMQ_BRIDGE_CMD_URL) :
                 m_reqAddrUrl(req_url), m_cmdAddrUrl(cmd_url),
+                m_serializer(),
+                m_defaultHandler(new ZeroRequestHandler()),
                 m_context(ZMQ_NUM_THREADS),
                 m_socket_requestHandler(m_context, ZMQ_REP),
                 m_socket_cmdReceiver(m_context, ZMQ_SUB),
                 m_socket_cmdDispatcher(m_context, ZMQ_PUB) {}
 
+        ~BridgeService() {
+            delete m_defaultHandler;
+        }
+
         /**
          * @return true if this component was initialized; false otherwise
          */
         inline bool is_initialized() const { return m_initialized; }
+
+        /**
+         * @return request handler used by default if none assigned
+         */
+        inline BridgeRequestHandler* default_handler() const { return m_defaultHandler; }
 
         /**
          * Initialize this service (must be executed after instantiation)
@@ -52,16 +72,17 @@ namespace SIMUCOPTER {
 
         /**
          * Handle new incoming messages from the sockets
+         * @return true if new events were handled; false if nothing new this cycle
          */
-        void update(void);
+        bool update(void);
 
         /**
          * Get a request handler for the given message ID, if assigned
          *
          * @param msgid message ID
-         * @return pointer to a BridgeRequestHandler instance, or nullptr if not assigned
+         * @return pointer to a BridgeRequestHandler instance, or default handler if not assigned
          */
-        BridgeRequestHandler* handler(int msgid);
+        BridgeRequestHandler& handler(int msgid);
 
         /**
          * Assign a BridgeRequestHandler instance to handle incoming commands
@@ -88,7 +109,10 @@ namespace SIMUCOPTER {
         const std::string m_reqAddrUrl; // listening address for request handler
         const std::string m_cmdAddrUrl; // listening address for command dispatcher
 
+        const ZmqBridgeMessageSerializer m_serializer;
+
         bool m_initialized = false;
+        BridgeRequestHandler* m_defaultHandler;
         std::map<int, BridgeRequestHandler*> m_handlers;
 
         // ZMQ context
