@@ -50,17 +50,17 @@ TEST_F(TestUnitBridgeService, InitSetsInitializedFlag) {
 }
 
 TEST_F(TestUnitBridgeService, HandlerAssignmentWorks) {
-    ASSERT_EQ(&handler, service.handler(COMMON_MSG_ID));
+    ASSERT_EQ(&handler, &service.handler(COMMON_MSG_ID));
 }
 
-TEST_F(TestUnitBridgeService, UnassignedHandlerLookupReturnsNull) {
-    ASSERT_EQ(nullptr, service.handler(0));
+TEST_F(TestUnitBridgeService, UnassignedHandlerLookupReturnsZeroRequestHandler) {
+    ASSERT_EQ(service.default_handler(), &service.handler(0));
 }
 
 TEST_F(TestUnitBridgeService, ClearRequestHandlerWorks) {
-    ASSERT_EQ(&handler, service.handler(COMMON_MSG_ID));
+    ASSERT_EQ(&handler, &service.handler(COMMON_MSG_ID));
     service.clear_request_handler(COMMON_MSG_ID);
-    ASSERT_EQ(nullptr, service.handler(COMMON_MSG_ID));
+    ASSERT_EQ(service.default_handler(), &service.handler(COMMON_MSG_ID));
 }
 
 TEST_F(TestUnitBridgeService, UpdateCallWithoutMessagesDoesntBlock) {
