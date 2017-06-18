@@ -4,19 +4,12 @@
 #include <deque>
 #include <zmq.hpp>
 
+#include "simucopter.h"
 #include "BridgeRequestHandler.h"
 #include "ZmqBridgeMessageSerializer.h"
 
 
 namespace SIMUCOPTER {
-    static const int ZMQ_REP_RCV_TIMEOUT_MSEC = 10;
-    static const int ZMQ_NUM_THREADS = 1;
-    static const int MAX_MSG_PER_CYCLE = 5;  // messages per update() cycle
-
-    static const std::string ZMQ_BRIDGE_REQ_URL = "tcp://127.0.0.1:5555";
-    static const std::string ZMQ_BRIDGE_CMD_URL = "tcp://127.0.0.1:5556";
-    static const std::string ZMQ_BRIDGE_CMD_DISPATCH_URL = "inproc://simulink_commands";
-
     class ZeroRequestHandler: public BridgeRequestHandler {
     public:
         void handle(const BridgeMessage& request, BridgeMessage& response) {

@@ -3,11 +3,9 @@
 #include <string.h>
 #include <cstdint>
 
+#include "simucopter.h"
+
 namespace SIMUCOPTER {
-    const int BRIDGE_MSG_DATA_CAPACITY = 64;
-
-    enum BridgeMessageType { REQUEST=1, COMMAND=2, REPLY=3};
-
     class BridgeMessage {
     public:
         const int id;

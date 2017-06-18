@@ -1,12 +1,8 @@
-//
-// Created by icedragon on 6/18/17.
-//
-
 #pragma once
 
 #include <zmq.hpp>
 
-#include "BridgeService.h"
+#include "simucopter.h"
 #include "ZmqBridgeMessageSerializer.h"
 
 namespace SIMUCOPTER {
@@ -25,8 +21,8 @@ namespace SIMUCOPTER {
          * @param cmd_addr ZMQ URL for remote command handler
          */
         BridgeClient(
-                std::string req_addr = SIMUCOPTER::ZMQ_BRIDGE_REQ_URL,
-                std::string cmd_addr = SIMUCOPTER::ZMQ_BRIDGE_CMD_URL) :
+                std::string req_addr = ZMQ_BRIDGE_REQ_URL,
+                std::string cmd_addr = ZMQ_BRIDGE_CMD_URL) :
                 m_reqAddrUrl(req_addr),
                 m_cmdAddrUrl(cmd_addr),
                 m_serializer(),
