@@ -37,7 +37,7 @@ namespace SIMUCOPTER {
                 m_reqAddrUrl(req_url), m_cmdAddrUrl(cmd_url),
                 m_context(ZMQ_NUM_THREADS),
                 m_socket_requestHandler(m_context, ZMQ_REP),
-                m_socket_cmdReceiver(m_context, ZMQ_PAIR),
+                m_socket_cmdReceiver(m_context, ZMQ_SUB),
                 m_socket_cmdDispatcher(m_context, ZMQ_PUB) {}
 
         /**
