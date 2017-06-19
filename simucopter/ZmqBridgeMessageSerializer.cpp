@@ -13,7 +13,10 @@ struct s_bridge_msg {
 
 
 zmq::message_t SIMUCOPTER::ZmqBridgeMessageSerializer::serialize(const BridgeMessage& msg) const {
-    s_bridge_msg msg_struct { msg.type, msg.id, msg.size() };
+    s_bridge_msg msg_struct;
+    msg_struct.type = msg.type;
+    msg_struct.id = msg.id;
+    msg_struct.data_sz = msg.size();
     msg.load_data(msg_struct.data, sizeof(msg_struct.data));
     return zmq::message_t(&msg_struct, sizeof(msg_struct));
 }
