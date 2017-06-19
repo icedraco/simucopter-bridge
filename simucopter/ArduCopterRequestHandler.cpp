@@ -1,6 +1,6 @@
 #include "ArduCopterRequestHandler.h"
 
-void SIMUCOPTER::ArduCopterRequestHandler::register_self(BridgeService &service) const {
+void SIMUCOPTER::ArduCopterRequestHandler::register_self(BridgeService &service) {
     /**
      * NOTE: WE DO NOT PUT THE SET_* MESSAGES HERE, AS THEY ARE NOT
      *       CONSIDERED REQUESTS THAT MUST RETURN A VALUE!
@@ -24,7 +24,7 @@ void SIMUCOPTER::ArduCopterRequestHandler::register_self(BridgeService &service)
     service.set_request_handler(SimuCopterMessage::GET_DESIRED_THROTTLE, this);
 }
 
-virtual void SIMUCOPTER::ArduCopterRequestHandler::handle(const BridgeMessage &msg, BridgeMessage &response) {
+void SIMUCOPTER::ArduCopterRequestHandler::handle(const BridgeMessage &msg, BridgeMessage &response) {
     assert(msg.type == BridgeMessageType::REQUEST);
     double result;
     float target_roll, target_pitch, target_yaw;  // desired angles (GET_DESIRED_*)
