@@ -13,7 +13,7 @@ namespace SIMUCOPTER {
     class ArduCopterRequestHandler: public AbstractBridgeRequestHandler {
     public:
         void register_self(BridgeService& service) const;
-        virtual void handle(const BridgeMessage& msg, BridgeMessage& response) const;
+        virtual void handle(const BridgeMessage& msg, BridgeMessage& response);
     };
 
 }
