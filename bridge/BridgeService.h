@@ -96,11 +96,11 @@ namespace SIMUCOPTER {
          * of the specified message ID.
          *
          * @param msgid message ID
-         * @param handler handler responsible for handling messages
+         * @param new_handler handler responsible for handling messages
          */
-        inline void set_request_handler(int msgid, AbstractBridgeRequestHandler* handler) {
-            assert(handler != nullptr);
-            m_handlers[msgid] = handler;
+        inline void set_request_handler(int msgid, AbstractBridgeRequestHandler* new_handler) {
+            assert(new_handler != nullptr);
+            m_handlers[msgid] = new_handler;
         }
 
         /**
