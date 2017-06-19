@@ -38,6 +38,9 @@ static void extract_args(const BridgeMessage& cmd, int num_args, double* arg1, d
 
 
 void SIMUCOPTER::ArduCopterCommandHandler::handle(const BridgeMessage &cmd) const {
+    if (!m_active)
+        return;
+
     assert(cmd.type == BridgeMessageType::COMMAND);
     double arg1, arg2, arg3;
     switch ((SimuCopterMessage)cmd.id) {
