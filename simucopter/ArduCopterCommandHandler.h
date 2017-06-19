@@ -1,6 +1,6 @@
 #pragma  once
 
-#include <simucopter.h>
+#include <SimuCopterMessage.h>
 #include <AbstractBridgeCommandHandler.h>
 
 namespace SIMUCOPTER {

@@ -2,7 +2,7 @@
 
 #include <AbstractBridgeRequestHandler.h>
 #include <BridgeService.h>
-#include "simucopter.h"
+#include "SimuCopterMessage.h"
 
 namespace SIMUCOPTER {
 
