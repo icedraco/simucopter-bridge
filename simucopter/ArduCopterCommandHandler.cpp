@@ -37,12 +37,12 @@ static void extract_args(const BridgeMessage& cmd, int num_args, double* arg1, d
 }
 
 
-void SIMUCOPTER::ArduCopterCommandHandler::handle(const BridgeMessage &cmd) const {
+void SIMUCOPTER::ArduCopterCommandHandler::handle(const BridgeMessage &cmd) {
     assert(cmd.type == BridgeMessageType::COMMAND);
     double arg1, arg2, arg3;
     switch ((SimuCopterMessage)cmd.id) {
         case SimuCopterMessage::SHUTDOWN:
-            m_flag_shutdown = true;
+            m_shutdown = true;
             break;
 
         case SimuCopterMessage::SET_RATE_TARGET_YAW:

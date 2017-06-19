@@ -24,7 +24,7 @@ namespace SIMUCOPTER {
          * Handle an incoming remote command
          * @param cmd command
          */
-        virtual void handle(const BridgeMessage& cmd) const;
+        virtual void handle(const BridgeMessage& cmd);
 
     private:
         bool m_shutdown = false;
