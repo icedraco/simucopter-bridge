@@ -18,7 +18,10 @@ zmq::message_t SIMUCOPTER::ZmqBridgeMessageSerializer::serialize(const BridgeMes
     msg_struct.id = msg.id;
     msg_struct.data_sz = msg.size();
     msg.load_data(msg_struct.data, sizeof(msg_struct.data));
-    return zmq::message_t((const void*)&msg_struct, sizeof(msg_struct));
+
+    zmq::message_t zmq_msg(sizeof(msg_struct));
+    memcpy(zmq_msg.data(), &msg_struct, sizeof(msg_struct));
+    return zmq_msg;
 }
 
 BridgeMessage SIMUCOPTER::ZmqBridgeMessageSerializer::deserialize(const zmq::message_t& msg) const {
