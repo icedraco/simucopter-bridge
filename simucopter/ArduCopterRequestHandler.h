@@ -1,8 +1,11 @@
 #pragma once
 
+#define private public
+
 #include <bridge/AbstractBridgeRequestHandler.h>
 #include <bridge/BridgeService.h>
 #include "SimuCopterMessage.h"
+#include "Copter.h"
 
 namespace SIMUCOPTER {
 
