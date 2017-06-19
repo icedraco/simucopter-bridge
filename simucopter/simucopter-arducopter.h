@@ -4,6 +4,9 @@
 
 #pragma once
 
+// FIXME
+#define private public
+
 #include <thread>
 #include "ArduCopterRequestHandler.h"
 
