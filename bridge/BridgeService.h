@@ -46,8 +46,8 @@ namespace SIMUCOPTER {
                 m_socket_cmdOut(m_context, ZMQ_PUB)
         {
             m_socket_cmdReceiver.setsockopt(ZMQ_SUBSCRIBE, "", 0);
-            m_socket_cmdReceiver.setsockopt(ZMQ_RCVTIMEO, ZMQ_CMD_PUBLISH_TIMEOUT_MSEC);
-            m_socket_cmdOut.setsockopt(ZMQ_SNDTIMEO, ZMQ_CMD_DISPATCH_TIMEOUT_MSEC);
+            m_socket_cmdReceiver.setsockopt(ZMQ_RCVTIMEO, &ZMQ_CMD_PUBLISH_TIMEOUT_MSEC, sizeof(ZMQ_CMD_PUBLISH_TIMEOUT_MSEC));
+            m_socket_cmdOut.setsockopt(ZMQ_SNDTIMEO, &ZMQ_CMD_DISPATCH_TIMEOUT_MSEC, sizeof(ZMQ_CMD_DISPATCH_TIMEOUT_MSEC));
         }
 
         ~BridgeService() {

@@ -30,9 +30,9 @@ namespace SIMUCOPTER {
                 m_socket_requests(m_context, ZMQ_REQ),
                 m_socket_cmdPublish(m_context, ZMQ_PUB)
         {
-            m_socket_requests.setsockopt(ZMQ_REQ_RELAXED, 1);
-            m_socket_requests.setsockopt(ZMQ_REQ_CORRELATE, 1);
-            m_socket_cmdPublish.setsockopt(ZMQ_SNDTIMEO, ZMQ_CMD_PUBLISH_TIMEOUT_MSEC);
+//            m_socket_requests.setsockopt(ZMQ_REQ_RELAXED, 1);
+//            m_socket_requests.setsockopt(ZMQ_REQ_CORRELATE, 1);
+            m_socket_cmdPublish.setsockopt(ZMQ_SNDTIMEO, &ZMQ_CMD_PUBLISH_TIMEOUT_MSEC, sizeof(ZMQ_CMD_PUBLISH_TIMEOUT_MSEC));
         }
 
         ~BridgeClient() {
