@@ -1,7 +1,7 @@
 #include "AbstractBridgeCommandHandler.h"
 
 void SIMUCOPTER::AbstractBridgeCommandHandler::init() {
-    m_socket_cmdIn.connect(ZMQ_BRIDGE_CMD_DISPATCH_URL);
+    m_socket_cmdIn.connect(ZMQ_BRIDGE_CMD_DISPATCH_URL.c_str());
     m_socket_cmdIn.setsockopt(ZMQ_SUBSCRIBE, "", 0);
     m_initialized = true;
 }

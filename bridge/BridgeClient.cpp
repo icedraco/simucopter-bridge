@@ -2,8 +2,8 @@
 
 void SIMUCOPTER::BridgeClient::init(void) {
     if (!is_initialized()) {
-        m_socket_requests.connect(m_reqAddrUrl);
-        m_socket_cmdPublish.connect(m_cmdAddrUrl);
+        m_socket_requests.connect(m_reqAddrUrl.c_str());
+        m_socket_cmdPublish.connect(m_cmdAddrUrl.c_str());
         m_initialized = true;
     }
 }
