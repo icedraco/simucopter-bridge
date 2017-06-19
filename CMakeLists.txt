@@ -26,7 +26,7 @@ set(SOURCE_FILES_BRIDGE
 # simucopter source
 set(SOURCE_FILES_SIMUCOPTER
         main.cpp
-        simucopter/simucopter.h simucopter/SimulinkBridgeInterface.h simucopter/ArduCopterRequestHandler.cpp simucopter/ArduCopterRequestHandler.h simucopter/ArduCopterCommandHandler.cpp simucopter/ArduCopterCommandHandler.h)
+        simucopter/SimuCopterMessage.h simucopter/SimulinkBridgeInterface.h simucopter/ArduCopterRequestHandler.cpp simucopter/ArduCopterRequestHandler.h simucopter/ArduCopterCommandHandler.cpp simucopter/ArduCopterCommandHandler.h)
 
 add_executable(test_bridge ${SOURCE_FILES_BRIDGE})
 add_executable(test_simucopter ${SOURCE_FILES_SIMUCOPTER})
