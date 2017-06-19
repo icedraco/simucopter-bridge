@@ -2,7 +2,7 @@
 // This file contains ArduPilot flight mode for SIMULINK
 //
 
-#include <ArduCopterCommandHandler.h>
+#include "ArduCopterCommandHandler.h"
 #include "Copter.h"
 
 namespace SIMUCOPTER {

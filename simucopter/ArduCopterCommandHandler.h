@@ -1,7 +1,7 @@
 #pragma  once
 
-#include <SimuCopterMessage.h>
-#include <AbstractBridgeCommandHandler.h>
+#include <bridge/AbstractBridgeCommandHandler.h>
+#include "SimuCopterMessage.h"
 
 namespace SIMUCOPTER {
 

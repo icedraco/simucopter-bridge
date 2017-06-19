@@ -1,7 +1,7 @@
 #pragma once
 
-#include <AbstractBridgeRequestHandler.h>
-#include <BridgeService.h>
+#include <bridge/AbstractBridgeRequestHandler.h>
+#include <bridge/BridgeService.h>
 #include "SimuCopterMessage.h"
 
 namespace SIMUCOPTER {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <BridgeClient.h>
+#include <bridge/BridgeClient.h>
 #include "SimuCopterMessage.h"
 
 namespace SIMUCOPTER {
