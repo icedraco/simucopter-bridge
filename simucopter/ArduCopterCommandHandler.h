@@ -13,17 +13,6 @@ namespace SIMUCOPTER {
         ArduCopterCommandHandler() {}
 
         /**
-         * Start handling commands
-         */
-        inline void start(void) { m_active = true; }
-
-        /**
-         * Stop (i.e., pause) handling commands
-         * All commands missed while the handler is stopped will be discarded.
-         */
-        inline void stop(void) { m_active = false; }
-
-        /**
          * This method should be used to check if the underlying system was
          * asked remotely to shut down.
          *
@@ -38,7 +27,6 @@ namespace SIMUCOPTER {
         virtual void handle(const BridgeMessage& cmd) const;
 
     private:
-        bool m_active = false;
         bool m_shutdown = false;
     };
 
