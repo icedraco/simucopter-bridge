@@ -1,7 +1,5 @@
 #include "BridgeService.h"
 
-#include <stdio.h>
-
 void SIMUCOPTER::BridgeService::init(void) {
     if (!is_initialized()) {
         m_socket_cmdReceiver.bind(m_cmdAddrUrl);
