@@ -12,6 +12,7 @@
 namespace SIMUCOPTER {
     class ZeroRequestHandler: public AbstractBridgeRequestHandler {
     public:
+        virtual ~ZeroRequestHandler() {}
         void handle(const BridgeMessage& request, BridgeMessage& response) {
             int zero = 0;
             response.set_data(&zero, sizeof(zero));

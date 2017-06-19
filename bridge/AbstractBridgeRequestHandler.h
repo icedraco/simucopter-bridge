@@ -18,6 +18,9 @@ namespace SIMUCOPTER {
      */
     class AbstractBridgeRequestHandler {
     public:
+        AbstractBridgeRequestHandler() {}
+        virtual ~AbstractBridgeRequestHandler() {}
+
         /**
          * Handle an incoming BridgeMessage
          * @param msg incoming message
