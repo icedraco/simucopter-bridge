@@ -1,20 +1,23 @@
 #include "BridgeClient.h"
 
-void SIMUCOPTER::BridgeClient::init() {
-    // socket options
-    m_socket_requests.setsockopt(ZMQ_REQ_RELAXED, 1);
-    m_socket_requests.setsockopt(ZMQ_REQ_CORRELATE, 1);
-    m_socket_cmdTransmit.setsockopt(ZMQ_SNDTIMEO, ZMQ_REP_RCV_TIMEOUT_MSEC);
+void SIMUCOPTER::BridgeClient::init(void) {
+    if (!is_initialized()) {
+        m_socket_requests.connect(m_reqAddrUrl);
+        m_socket_cmdPublish.connect(m_cmdAddrUrl);
+        m_initialized = true;
+    }
+}
 
-    // connect
-    m_socket_requests.connect(m_reqAddrUrl);
-    m_socket_cmdTransmit.connect(m_cmdAddrUrl);
-
-    // set initialized flag
-    m_initialized = true;
+void SIMUCOPTER::BridgeClient::close(void) {
+    if (is_initialized()) {
+        m_socket_requests.close();
+        m_socket_cmdPublish.close();
+        m_initialized = false;
+    }
 }
 
 double SIMUCOPTER::BridgeClient::request_double(int msgid) {
+    assert(is_initialized());
     double result;
     BridgeMessage response = request(msgid);
     response.load_data(&result, sizeof(result));
@@ -22,26 +25,27 @@ double SIMUCOPTER::BridgeClient::request_double(int msgid) {
 }
 
 int SIMUCOPTER::BridgeClient::request_int(int msgid) {
+    assert(is_initialized());
     int result;
     BridgeMessage response = request(msgid);
     response.load_data(&result, sizeof(result));
     return result;
 }
 
-void SIMUCOPTER::BridgeClient::send_command(int msgid) {
+bool SIMUCOPTER::BridgeClient::send_command(int msgid) {
     assert(is_initialized());
     BridgeMessage cmd(BridgeMessageType::COMMAND, msgid);
-    m_socket_cmdTransmit.send(m_serializer.serialize(cmd), ZMQ_NOBLOCK);
+    return m_socket_cmdPublish.send(m_serializer.serialize(cmd), ZMQ_NOBLOCK);
 }
 
-void SIMUCOPTER::BridgeClient::send_command(int msgid, double arg1) {
+bool SIMUCOPTER::BridgeClient::send_command(int msgid, double arg1) {
     assert(is_initialized());
     BridgeMessage cmd(BridgeMessageType::COMMAND, msgid);
     cmd.set_data(&arg1, sizeof(arg1));
-    m_socket_cmdTransmit.send(m_serializer.serialize(cmd), ZMQ_NOBLOCK);
+    return m_socket_cmdPublish.send(m_serializer.serialize(cmd), ZMQ_NOBLOCK);
 }
 
-void SIMUCOPTER::BridgeClient::send_command(int msgid, double arg1, double arg2) {
+bool SIMUCOPTER::BridgeClient::send_command(int msgid, double arg1, double arg2) {
     assert(is_initialized());
     struct {
         double arg1;
@@ -53,7 +57,7 @@ void SIMUCOPTER::BridgeClient::send_command(int msgid, double arg1, double arg2)
     s_args.arg2 = arg2;
 
     cmd.set_data(&s_args, sizeof(s_args));
-    m_socket_cmdTransmit.send(m_serializer.serialize(cmd), ZMQ_NOBLOCK);
+    return m_socket_cmdPublish.send(m_serializer.serialize(cmd), ZMQ_NOBLOCK);
 }
 
 
