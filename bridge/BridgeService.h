@@ -50,7 +50,7 @@ namespace SIMUCOPTER {
             m_socket_cmdOut.setsockopt(ZMQ_SNDTIMEO, &ZMQ_CMD_DISPATCH_TIMEOUT_MSEC, sizeof(ZMQ_CMD_DISPATCH_TIMEOUT_MSEC));
         }
 
-        ~BridgeService() {
+        virtual ~BridgeService() {
             if (is_initialized())
                 close();
 
