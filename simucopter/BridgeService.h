@@ -5,12 +5,12 @@
 #include <zmq.hpp>
 
 #include "simucopter.h"
-#include "BridgeRequestHandler.h"
+#include "AbstractBridgeRequestHandler.h"
 #include "ZmqBridgeMessageSerializer.h"
 
 
 namespace SIMUCOPTER {
-    class ZeroRequestHandler: public BridgeRequestHandler {
+    class ZeroRequestHandler: public AbstractBridgeRequestHandler {
     public:
         void handle(const BridgeMessage& request, BridgeMessage& response) {
             int zero = 0;
@@ -36,15 +36,24 @@ namespace SIMUCOPTER {
         BridgeService(
                 const std::string req_url = ZMQ_BRIDGE_REQ_URL,
                 const std::string cmd_url = ZMQ_BRIDGE_CMD_URL) :
-                m_reqAddrUrl(req_url), m_cmdAddrUrl(cmd_url),
+                m_reqAddrUrl(req_url),
+                m_cmdAddrUrl(cmd_url),
                 m_serializer(),
                 m_defaultHandler(new ZeroRequestHandler()),
-                m_context(ZMQ_NUM_THREADS),
+                m_context(ZmqContextContainer::get_context()),
                 m_socket_requestHandler(m_context, ZMQ_REP),
                 m_socket_cmdReceiver(m_context, ZMQ_SUB),
-                m_socket_cmdDispatcher(m_context, ZMQ_PUB) {}
+                m_socket_cmdOut(m_context, ZMQ_PUB)
+        {
+            m_socket_cmdReceiver.setsockopt(ZMQ_SUBSCRIBE, "", 0);
+            m_socket_cmdReceiver.setsockopt(ZMQ_RCVTIMEO, ZMQ_CMD_PUBLISH_TIMEOUT_MSEC);
+            m_socket_cmdOut.setsockopt(ZMQ_SNDTIMEO, ZMQ_CMD_DISPATCH_TIMEOUT_MSEC);
+        }
 
         ~BridgeService() {
+            if (is_initialized())
+                close();
+
             delete m_defaultHandler;
         }
 
@@ -56,12 +65,17 @@ namespace SIMUCOPTER {
         /**
          * @return request handler used by default if none assigned
          */
-        inline BridgeRequestHandler* default_handler() const { return m_defaultHandler; }
+        inline AbstractBridgeRequestHandler* default_handler() const { return m_defaultHandler; }
 
         /**
          * Initialize this service (must be executed after instantiation)
          */
         void init(void);
+
+        /**
+         * Terminate the service and close all its connections
+         */
+        void close(void);
 
         /**
          * Handle new incoming messages from the sockets
@@ -75,7 +89,7 @@ namespace SIMUCOPTER {
          * @param msgid message ID
          * @return pointer to a BridgeRequestHandler instance, or default handler if not assigned
          */
-        BridgeRequestHandler& handler(int msgid);
+        AbstractBridgeRequestHandler& handler(int msgid);
 
         /**
          * Assign a BridgeRequestHandler instance to handle incoming commands
@@ -84,7 +98,7 @@ namespace SIMUCOPTER {
          * @param msgid message ID
          * @param handler handler responsible for handling messages
          */
-        inline void set_request_handler(int msgid, BridgeRequestHandler* handler) {
+        inline void set_request_handler(int msgid, AbstractBridgeRequestHandler* handler) {
             assert(handler != nullptr);
             m_handlers[msgid] = handler;
         }
@@ -105,11 +119,11 @@ namespace SIMUCOPTER {
         const ZmqBridgeMessageSerializer m_serializer;
 
         bool m_initialized = false;
-        BridgeRequestHandler* m_defaultHandler;
-        std::map<int, BridgeRequestHandler*> m_handlers;
+        AbstractBridgeRequestHandler* m_defaultHandler;
+        std::map<int, AbstractBridgeRequestHandler*> m_handlers;
 
         // ZMQ context
-        zmq::context_t m_context;
+        zmq::context_t& m_context;
 
         // for blocking data requests from Simulink
         zmq::socket_t m_socket_requestHandler;
@@ -118,6 +132,6 @@ namespace SIMUCOPTER {
         zmq::socket_t m_socket_cmdReceiver;
 
         // publishes commands to Flight Mode Code
-        zmq::socket_t m_socket_cmdDispatcher;
+        zmq::socket_t m_socket_cmdOut;
     };
 }
