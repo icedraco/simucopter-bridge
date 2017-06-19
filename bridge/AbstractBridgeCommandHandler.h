@@ -62,7 +62,7 @@ namespace SIMUCOPTER {
          * Handle an incoming command message
          * @param cmd command message
          */
-        virtual void handle(const BridgeMessage& cmd) const = 0;
+        virtual void handle(const BridgeMessage& cmd) = 0;
 
     private:
         const ZmqBridgeMessageSerializer m_serializer;
