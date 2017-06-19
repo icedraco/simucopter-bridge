@@ -22,8 +22,11 @@ namespace SIMUCOPTER {
     public:
         AbstractBridgeCommandHandler() :
                 m_serializer(),
-                m_context(ZMQ_NUM_THREADS),
-                m_socket_cmdPub(m_context, ZMQ_SUB) {}
+                m_context(ZmqContextContainer::get_context()),
+                m_socket_cmdIn(m_context, ZMQ_SUB)
+        {
+            m_socket_cmdIn.setsockopt(ZMQ_SUBSCRIBE, "", 0);
+        }
 
         /**
          * @return true if this component was initialized; false otherwise
@@ -34,6 +37,16 @@ namespace SIMUCOPTER {
          * Initialize this handler (must be executed after instantiation)
          */
         void init(void);
+
+        /**
+         * Initialize this handler (must be executed after instantiation)
+         */
+        inline void close(void) {
+            if (is_initialized()) {
+                m_socket_cmdIn.close();
+                m_initialized = false;
+            }
+        }
 
         /**
          * Handle next message (if available)
@@ -54,8 +67,8 @@ namespace SIMUCOPTER {
     private:
         const ZmqBridgeMessageSerializer m_serializer;
         bool m_initialized = false;
-        zmq::context_t m_context;
-        zmq::socket_t m_socket_cmdPub;
+        zmq::context_t& m_context;
+        zmq::socket_t m_socket_cmdIn;
     };
 
 }
