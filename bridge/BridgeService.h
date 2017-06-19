@@ -4,7 +4,7 @@
 #include <deque>
 #include <zmq.hpp>
 
-#include "simucopter.h"
+#include "simucopter-bridge.h"
 #include "AbstractBridgeRequestHandler.h"
 #include "ZmqBridgeMessageSerializer.h"
 

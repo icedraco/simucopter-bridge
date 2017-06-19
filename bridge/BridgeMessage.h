@@ -3,7 +3,7 @@
 #include <string.h>
 #include <cstdint>
 
-#include "simucopter.h"
+#include "simucopter-bridge.h"
 
 namespace SIMUCOPTER {
     class BridgeMessage {

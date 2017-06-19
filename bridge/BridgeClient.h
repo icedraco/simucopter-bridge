@@ -2,7 +2,7 @@
 
 #include <zmq.hpp>
 
-#include "simucopter.h"
+#include "simucopter-bridge.h"
 #include "ZmqBridgeMessageSerializer.h"
 
 namespace SIMUCOPTER {
