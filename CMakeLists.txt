@@ -11,7 +11,7 @@ include_directories(simucopter_test/lib/googletest/googlemock/include)
 # simucopter library
 include_directories(simucopter)
 
-set(SOURCE_FILES main.cpp simucopter/BridgeMessage.cpp simucopter_test/TestUnitBridgeMessage.cpp simucopter/BridgeService.cpp simucopter/BridgeService.h simucopter/BridgeRequestHandler.h simucopter_test/TestUnitBridgeService.cpp simucopter/ZmqBridgeMessageSerializer.cpp simucopter/ZmqBridgeMessageSerializer.h simucopter_test/TestUnitZmqMessageSerializer.cpp simucopter/BridgeClient.cpp simucopter/BridgeClient.cpp simucopter/BridgeClient.h simucopter_test/TestUnitBridgeClient.cpp)
+set(SOURCE_FILES main.cpp simucopter/BridgeMessage.cpp simucopter_test/TestUnitBridgeMessage.cpp simucopter/BridgeService.cpp simucopter/BridgeService.h simucopter/AbstractBridgeRequestHandler.h simucopter_test/TestUnitBridgeService.cpp simucopter/ZmqBridgeMessageSerializer.cpp simucopter/ZmqBridgeMessageSerializer.h simucopter_test/TestUnitZmqMessageSerializer.cpp simucopter/BridgeClient.cpp simucopter/BridgeClient.cpp simucopter/BridgeClient.h simucopter_test/TestUnitBridgeClient.cpp simucopter_test/TestIntBridgeClientAndService.cpp simucopter/simucopter.h simucopter/AbstractBridgeCommandHandler.cpp simucopter/AbstractBridgeCommandHandler.h simucopter_test/TestUnitAbstractBridgeCommandHandler.cpp simucopter_test/test-common.h)
 add_executable(simutest ${SOURCE_FILES})
 
 target_link_libraries(simutest zmq gtest gtest_main)
