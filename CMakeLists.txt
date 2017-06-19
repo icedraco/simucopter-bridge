@@ -10,10 +10,11 @@ include_directories(bridge_test/lib/googletest/googlemock/include)
 
 # bridge library
 include_directories(bridge)
+include_directories(simucopter)
 
-set(SOURCE_FILES
+set(SOURCE_FILES_BRIDGE
         main.cpp
-        bridge/simucopter.h
+        bridge/simucopter-bridge.h
         bridge/AbstractBridgeCommandHandler.cpp bridge/AbstractBridgeCommandHandler.h bridge_test/TestUnitAbstractBridgeCommandHandler.cpp
         bridge/BridgeClient.cpp  bridge/BridgeClient.h  bridge_test/TestUnitBridgeClient.cpp
         bridge/BridgeMessage.cpp bridge/BridgeMessage.h bridge_test/TestUnitBridgeMessage.cpp
@@ -22,6 +23,12 @@ set(SOURCE_FILES
         bridge_test/test-common.h
         bridge_test/TestIntBridgeClientAndService.cpp)
 
-add_executable(simutest ${SOURCE_FILES})
+# simucopter source
+set(SOURCE_FILES_SIMUCOPTER
+        main.cpp
+        simucopter/simucopter.h simucopter/SimulinkBridgeInterface.h simucopter/ArduCopterRequestHandler.cpp simucopter/ArduCopterRequestHandler.h simucopter/ArduCopterCommandHandler.cpp simucopter/ArduCopterCommandHandler.h)
 
-target_link_libraries(simutest zmq gtest gtest_main)
+add_executable(test_bridge ${SOURCE_FILES_BRIDGE})
+add_executable(test_simucopter ${SOURCE_FILES_SIMUCOPTER})
+
+target_link_libraries(test_bridge zmq gtest gtest_main)
