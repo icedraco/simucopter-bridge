@@ -1,8 +1,11 @@
 #pragma  once
 
+// FIXME: This is needed to access some of Copter.h data
+#define private public
+
 #include <bridge/AbstractBridgeCommandHandler.h>
-#include "Copter.h"
 #include "SimuCopterMessage.h"
+#include "Copter.h"
 
 namespace SIMUCOPTER {
 
