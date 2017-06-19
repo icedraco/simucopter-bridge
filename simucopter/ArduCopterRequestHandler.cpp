@@ -31,7 +31,7 @@ void SIMUCOPTER::ArduCopterRequestHandler::handle(const BridgeMessage &msg, Brid
 
     switch ((SimuCopterMessage)msg.type) {
         case SimuCopterMessage::GET_FLIGHT_MODE:
-            result = copter.copter_control_mode;
+            result = copter.control_mode;
             break;
 
         case SimuCopterMessage::GET_ACCEL_X:
