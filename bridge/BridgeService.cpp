@@ -35,7 +35,8 @@ bool SIMUCOPTER::BridgeService::update(void) {
 
             BridgeMessage response = request.get_reply();
             handler(request.id).handle(request, response);
-            m_socket_requestHandler.send(m_serializer.serialize(response));
+            zmq::message_t zmq_rep_msg = m_serializer.serialize(response);
+            m_socket_requestHandler.send(&zmq_rep_msg, ZMQ_NOBLOCK);
             handled = true;
         } else {
             flag_depleted = true;
@@ -50,7 +51,7 @@ bool SIMUCOPTER::BridgeService::update(void) {
     for (int i = 0; !flag_depleted && i < MAX_MSG_PER_CYCLE; i++) {
         zmq::message_t cmd_msg;
         if (m_socket_cmdReceiver.recv(&cmd_msg, ZMQ_NOBLOCK)) {
-            m_socket_cmdOut.send(cmd_msg, ZMQ_NOBLOCK);
+            m_socket_cmdOut.send(&cmd_msg, ZMQ_NOBLOCK);
             handled = true;
         } else {
             flag_depleted = true;
