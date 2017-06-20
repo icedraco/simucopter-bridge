@@ -69,7 +69,8 @@ bool SIMUCOPTER::BridgeClient::send_command(int msgid, double arg1, double arg2)
 BridgeMessage SIMUCOPTER::BridgeClient::request(int msgid) {
     assert(is_initialized());
     BridgeMessage request(BridgeMessageType::REQUEST, msgid);
-    m_socket_requests.send(m_serializer.serialize(request));
+    zmq::message_t zmq_msg_req = m_serializer.serialize(request);
+    m_socket_requests.send(&zmq_msg_req, ZMQ_NOBLOCK);
 
     zmq::message_t msg;
     assert(m_socket_requests.recv(&msg));
