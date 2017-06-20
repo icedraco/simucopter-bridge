@@ -2,9 +2,9 @@
 
 void SIMUCOPTER::BridgeService::init(void) {
     if (!is_initialized()) {
-        m_socket_cmdReceiver.bind(m_cmdAddrUrl);
-        m_socket_requestHandler.bind(m_reqAddrUrl);
-        m_socket_cmdOut.bind(ZMQ_BRIDGE_CMD_DISPATCH_URL);
+        m_socket_cmdReceiver.bind(m_cmdAddrUrl.c_str());
+        m_socket_requestHandler.bind(m_reqAddrUrl.c_str());
+        m_socket_cmdOut.bind(ZMQ_BRIDGE_CMD_DISPATCH_URL.c_str());
         m_initialized = true;
     }
 }
