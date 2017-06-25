@@ -35,6 +35,8 @@ namespace SIMUCOPTER {
             m_socket_cmdPublish.setsockopt(ZMQ_SNDTIMEO, &ZMQ_CMD_PUBLISH_TIMEOUT_MSEC, sizeof(ZMQ_CMD_PUBLISH_TIMEOUT_MSEC));
         }
 
+        BridgeClient(BridgeClient& other) = delete;
+
         virtual ~BridgeClient() {
             if (is_initialized())
                 close();
