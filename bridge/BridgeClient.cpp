@@ -36,7 +36,7 @@ bool SIMUCOPTER::BridgeClient::send_command(int msgid) {
     assert(is_initialized());
     BridgeMessage cmd(BridgeMessageType::COMMAND, msgid);
     zmq::message_t zmq_msg = m_serializer.serialize(cmd);
-    return m_socket_cmdPublish.send(&zmq_msg, ZMQ_NOBLOCK);
+    return m_socket_cmdPublish.send(&zmq_msg, ZMQ_NOBLOCK) > 0;
 }
 
 bool SIMUCOPTER::BridgeClient::send_command(int msgid, double arg1) {
@@ -44,7 +44,7 @@ bool SIMUCOPTER::BridgeClient::send_command(int msgid, double arg1) {
     BridgeMessage cmd(BridgeMessageType::COMMAND, msgid);
     cmd.set_data(&arg1, sizeof(arg1));
     zmq::message_t zmq_msg = m_serializer.serialize(cmd);
-    return m_socket_cmdPublish.send(&zmq_msg, ZMQ_NOBLOCK);
+    return m_socket_cmdPublish.send(&zmq_msg, ZMQ_NOBLOCK) > 0;
 }
 
 bool SIMUCOPTER::BridgeClient::send_command(int msgid, double arg1, double arg2) {
@@ -60,7 +60,7 @@ bool SIMUCOPTER::BridgeClient::send_command(int msgid, double arg1, double arg2)
 
     cmd.set_data(&s_args, sizeof(s_args));
     zmq::message_t zmq_msg = m_serializer.serialize(cmd);
-    return m_socket_cmdPublish.send(&zmq_msg, ZMQ_NOBLOCK);
+    return m_socket_cmdPublish.send(&zmq_msg, ZMQ_NOBLOCK) > 0;
 }
 
 
