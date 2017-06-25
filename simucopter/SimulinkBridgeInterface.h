@@ -1,6 +1,6 @@
 #pragma once
 
-#include <bridge/BridgeClient.h>
+#include <BridgeClient.h>
 #include "SimuCopterMessage.h"
 
 namespace SIMUCOPTER {
@@ -13,34 +13,69 @@ namespace SIMUCOPTER {
      */
     class SimulinkBridgeInterface {
     public:
-        SimulinkBridgeInterface(BridgeClient& client) : m_client(client) {
-            assert(client.is_initialized());
+        SimulinkBridgeInterface(BridgeClient* client) : m_client(client) {
+            assert(client->is_initialized());
         }
 
-        inline double get_flight_mode() { return m_client.request_double(SimuCopterMessage::GET_FLIGHT_MODE); };
-        inline double get_accel_x() { return m_client.request_double(SimuCopterMessage::GET_ACCEL_X); };
-        inline double get_accel_y() { return m_client.request_double(SimuCopterMessage::GET_ACCEL_Y); };
-        inline double get_accel_z() { return m_client.request_double(SimuCopterMessage::GET_ACCEL_Z); };
-        inline double get_gyro_x() { return m_client.request_double(SimuCopterMessage::GET_GYRO_X); };
-        inline double get_gyro_y() { return m_client.request_double(SimuCopterMessage::GET_GYRO_Y); };
-        inline double get_gyro_z() { return m_client.request_double(SimuCopterMessage::GET_GYRO_Z); };
-        inline double get_state_yaw() { return m_client.request_double(SimuCopterMessage::GET_STATE_YAW); };
-        inline double get_state_roll() { return m_client.request_double(SimuCopterMessage::GET_STATE_ROLL); };
-        inline double get_state_pitch() { return m_client.request_double(SimuCopterMessage::GET_STATE_PITCH); };
-        inline double get_desired_yaw() { return m_client.request_double(SimuCopterMessage::GET_DESIRED_YAW); };
-        inline double get_desired_roll() { return m_client.request_double(SimuCopterMessage::GET_DESIRED_ROLL); };
-        inline double get_desired_pitch() { return m_client.request_double(SimuCopterMessage::GET_DESIRED_PITCH); };
-        inline double get_desired_throttle() { return m_client.request_double(SimuCopterMessage::GET_DESIRED_THROTTLE); };
-
-        inline void set_rate_target_yaw(double yaw) { m_client.send_command(SimuCopterMessage::SET_RATE_TARGET_YAW, yaw); };
-        inline void set_rate_target_pitch(double pitch) { m_client.send_command(SimuCopterMessage::SET_RATE_TARGET_PITCH, pitch); };
-        inline void set_rate_target_roll(double roll) { m_client.send_command(SimuCopterMessage::SET_RATE_TARGET_ROLL, roll); };
-        inline void motors_set_roll(double roll) { m_client.send_command(SimuCopterMessage::SET_MOTORS_ROLL, roll); };
-        inline void motors_set_pitch(double pitch) { m_client.send_command(SimuCopterMessage::SET_MOTORS_PITCH, pitch); };
-        inline void motors_set_yaw(double yaw) { m_client.send_command(SimuCopterMessage::SET_MOTORS_YAW, yaw); };
-        inline void motors_set_throttle(double throttle) { m_client.send_command(SimuCopterMessage::SET_MOTORS_THROTTLE, throttle); };
+        double get_flight_mode() { return m_client->request_double(SimuCopterMessage::GET_FLIGHT_MODE); };
+        double get_accel_x() { return m_client->request_double(SimuCopterMessage::GET_ACCEL_X); };
+        double get_accel_y() { return m_client->request_double(SimuCopterMessage::GET_ACCEL_Y); };
+        double get_accel_z() { return m_client->request_double(SimuCopterMessage::GET_ACCEL_Z); };
+        double get_gyro_x() { return m_client->request_double(SimuCopterMessage::GET_GYRO_X); };
+        double get_gyro_y() { return m_client->request_double(SimuCopterMessage::GET_GYRO_Y); };
+        double get_gyro_z() { return m_client->request_double(SimuCopterMessage::GET_GYRO_Z); };
+        double get_state_yaw() { return m_client->request_double(SimuCopterMessage::GET_STATE_YAW); };
+        double get_state_roll() { return m_client->request_double(SimuCopterMessage::GET_STATE_ROLL); };
+        double get_state_pitch() { return m_client->request_double(SimuCopterMessage::GET_STATE_PITCH); };
+        double get_desired_yaw() { return m_client->request_double(SimuCopterMessage::GET_DESIRED_YAW); };
+        double get_desired_roll() { return m_client->request_double(SimuCopterMessage::GET_DESIRED_ROLL); };
+        double get_desired_pitch() { return m_client->request_double(SimuCopterMessage::GET_DESIRED_PITCH); };
+        double get_desired_throttle() { return m_client->request_double(SimuCopterMessage::GET_DESIRED_THROTTLE); };
+        void set_rate_target_yaw(double yaw) { m_client->send_command(SimuCopterMessage::SET_RATE_TARGET_YAW, yaw); };
+        void set_rate_target_pitch(double pitch) { m_client->send_command(SimuCopterMessage::SET_RATE_TARGET_PITCH, pitch); };
+        void set_rate_target_roll(double roll) { m_client->send_command(SimuCopterMessage::SET_RATE_TARGET_ROLL, roll); };
+        void motors_set_roll(double roll) { m_client->send_command(SimuCopterMessage::SET_MOTORS_ROLL, roll); };
+        void motors_set_pitch(double pitch) { m_client->send_command(SimuCopterMessage::SET_MOTORS_PITCH, pitch); };
+        void motors_set_yaw(double yaw) { m_client->send_command(SimuCopterMessage::SET_MOTORS_YAW, yaw); };
+        void motors_set_throttle(double throttle) { m_client->send_command(SimuCopterMessage::SET_MOTORS_THROTTLE, throttle); };
 
     private:
-        BridgeClient& m_client;
+        BridgeClient* m_client;
     };
 }
+
+
+// C interface
+#ifdef __cplusplus
+extern "C" {
+#endif
+/*****************************************************************************\
+ * Flight Mode Functions *****************************************************
+\*****************************************************************************/
+
+double __copter_get_accel_x();
+double __copter_get_accel_y();
+double __copter_get_accel_z();
+double __copter_get_gyro_x();
+double __copter_get_gyro_y();
+double __copter_get_gyro_z();
+double __copter_get_state_yaw();
+double __copter_get_state_roll();
+double __copter_get_state_pitch();
+double __copter_get_desired_yaw();
+double __copter_get_desired_roll();
+double __copter_get_desired_pitch();
+double __copter_get_desired_throttle();
+void __copter_set_rate_target_yaw(double yaw);
+void __copter_set_rate_target_pitch(double pitch);
+void __copter_set_rate_target_roll(double roll);
+void __copter_motors_set_roll(double roll);
+void __copter_motors_set_pitch(double pitch);
+void __copter_motors_set_yaw(double yaw);
+void __copter_motors_set_throttle(double throttle);
+void __copter_gcs_send_text(int severity, const char* str);
+double __sitl_whatever();
+
+#ifdef __cplusplus
+}
+#endif

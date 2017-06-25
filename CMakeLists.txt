@@ -10,7 +10,7 @@ include_directories(bridge_test/lib/googletest/googlemock/include)
 
 # bridge library
 include_directories(bridge)
-include_directories(simucopter)
+# include_directories(simucopter)
 
 set(SOURCE_FILES_BRIDGE
         main.cpp
@@ -21,15 +21,15 @@ set(SOURCE_FILES_BRIDGE
         bridge/BridgeService.cpp bridge/BridgeService.h bridge_test/TestUnitBridgeService.cpp
         bridge/ZmqBridgeMessageSerializer.cpp bridge/ZmqBridgeMessageSerializer.h bridge_test/TestUnitZmqMessageSerializer.cpp
         bridge_test/test-common.h
-        bridge_test/TestIntBridgeClientAndService.cpp)
+        bridge_test/TestIntBridgeClientAndService.cpp simucopter/simucopter_agent.cpp simucopter/SitlBridgeInterface.h)
 
 # simucopter source
 # TODO: Some of these sources can't be compiled locally without ArduPilot code - deal with it somehow
-set(SOURCE_FILES_SIMUCOPTER
-        main.cpp
-        simucopter/SimuCopterMessage.h simucopter/SimulinkBridgeInterface.h simucopter/ArduCopterRequestHandler.cpp simucopter/ArduCopterRequestHandler.h simucopter/ArduCopterCommandHandler.cpp simucopter/ArduCopterCommandHandler.h simucopter/simucopter-arducopter.h simucopter/simucopter-arducopter.cpp simucopter/control_simulink.cpp)
+#set(SOURCE_FILES_SIMUCOPTER
+#        main.cpp
+#        simucopter/SimuCopterMessage.h simucopter/SimulinkBridgeInterface.h simucopter/ArduCopterRequestHandler.cpp simucopter/ArduCopterRequestHandler.h simucopter/ArduCopterCommandHandler.cpp simucopter/ArduCopterCommandHandler.h simucopter/simucopter-arducopter.h simucopter/simucopter-arducopter.cpp simucopter/control_simulink.cpp)
 
 add_executable(test_bridge ${SOURCE_FILES_BRIDGE})
-add_executable(test_simucopter ${SOURCE_FILES_SIMUCOPTER})
+#add_executable(test_simucopter ${SOURCE_FILES_SIMUCOPTER})
 
 target_link_libraries(test_bridge zmq gtest gtest_main)

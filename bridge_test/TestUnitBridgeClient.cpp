@@ -93,7 +93,7 @@ TEST_F(TestUnitBridgeClient, SendCommandArrivesAtDestination) {
     int counter = 0;
     std::thread t(command_receiver, &ssub, &counter);
 
-    usleep(250000);
+    usleep(500000);
     client.send_command(COMMON_MSG_ID);
     client.send_command(COMMON_MSG_ID);
     client.send_command(COMMON_MSG_ID);
