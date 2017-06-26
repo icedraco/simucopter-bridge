@@ -12,20 +12,21 @@ struct s_bridge_msg {
 };
 
 
-zmq::message_t SIMUCOPTER::ZmqBridgeMessageSerializer::serialize(const BridgeMessage& msg) const {
-    s_bridge_msg msg_struct;
-    msg_struct.type = msg.type;
-    msg_struct.id = msg.id;
-    msg_struct.data_sz = msg.size();
-    msg.load_data(msg_struct.data, sizeof(msg_struct.data));
-
-    zmq::message_t zmq_msg(sizeof(msg_struct));
-    memcpy(zmq_msg.data(), &msg_struct, sizeof(msg_struct));
-    return zmq_msg;
+size_t SIMUCOPTER::ZmqBridgeMessageSerializer::serialize(const BridgeMessage& msg, void* dst, size_t dst_sz) const {
+    assert(dst_sz >= sizeof(struct s_bridge_msg));
+    s_bridge_msg* msg_struct = (s_bridge_msg*)dst;
+    msg_struct->type = msg.type;
+    msg_struct->id = msg.id;
+    msg_struct->data_sz = msg.size();
+    size_t data_len = msg.load_data(msg_struct->data, sizeof(msg_struct->data));
+    size_t actual_size = sizeof(s_bridge_msg) - sizeof(msg_struct->data) + data_len;
+    return actual_size;
 }
 
-BridgeMessage SIMUCOPTER::ZmqBridgeMessageSerializer::deserialize(const zmq::message_t& msg) const {
-    s_bridge_msg *msg_struct = (s_bridge_msg*)msg.data();
+BridgeMessage SIMUCOPTER::ZmqBridgeMessageSerializer::deserialize(const void* msg, size_t len) const {
+    const s_bridge_msg *msg_struct = (s_bridge_msg*)msg;
+    assert(len >= sizeof(s_bridge_msg) - SIMUCOPTER::BRIDGE_MSG_DATA_CAPACITY);
+
     BridgeMessage bridge_msg((SIMUCOPTER::BridgeMessageType)msg_struct->type, msg_struct->id);
     bridge_msg.set_data(msg_struct->data, msg_struct->data_sz);
     return bridge_msg;

@@ -28,15 +28,24 @@ bool SIMUCOPTER::BridgeService::update(void) {
     // be served ASAP - we do it here through AbstractBridgeRequestHandler map
     flag_depleted = false;
     for (int i = 0; !flag_depleted && i < MAX_MSG_PER_CYCLE; i++) {
-        zmq::message_t req_msg;
-        if (m_socket_requestHandler.recv(&req_msg, ZMQ_NOBLOCK)) {
-            BridgeMessage request = m_serializer.deserialize(req_msg);
+        char buffer[1024];
+        size_t msg_size = m_socket_requestHandler.recv(&buffer, 1024, ZMQ_NOBLOCK);
+        if (msg_size > 0) {
+            BridgeMessage request = m_serializer.deserialize(buffer, msg_size);
+
+            // TODO: REMOVE THIS - DEBUG CODE
+            if (request.type != BridgeMessageType::REQUEST) {
+                fprintf(stderr, "\nWARNING: BridgeService::update() RECEIVED NON-REQUEST -> type=%d, id=0x%x\n", request.type, request.id);
+                fflush(stderr);
+            }
+
             assert(request.type == BridgeMessageType::REQUEST);
 
             BridgeMessage response = request.get_reply();
             handler(request.id).handle(request, response);
-            zmq::message_t zmq_rep_msg = m_serializer.serialize(response);
-            m_socket_requestHandler.send(&zmq_rep_msg, ZMQ_NOBLOCK);
+
+            size_t pkt_sz = m_serializer.serialize(response, buffer, 1024);
+            m_socket_requestHandler.send(&buffer, pkt_sz, ZMQ_NOBLOCK);
             handled = true;
         } else {
             flag_depleted = true;

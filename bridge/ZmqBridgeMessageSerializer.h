@@ -12,7 +12,7 @@ namespace SIMUCOPTER {
      */
     class ZmqBridgeMessageSerializer {
     public:
-        zmq::message_t serialize(const BridgeMessage& msg) const;
-        BridgeMessage deserialize(const zmq::message_t& msg) const;
+        size_t serialize(const BridgeMessage& msg, void* dst, size_t dst_sz) const;
+        BridgeMessage deserialize(const void* src, size_t len) const;
     };
 }

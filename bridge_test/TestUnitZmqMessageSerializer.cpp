@@ -29,7 +29,11 @@ namespace {
 
 
 TEST_F(TestUnitZmqMessageSerializer, SerializationLoopWithoutMessage) {
-    BridgeMessage result = serializer.deserialize(serializer.serialize(msg));
+    char buffer[1024];
+    size_t pkt_sz = serializer.serialize(msg, buffer, 1024);
+    ASSERT_GT(pkt_sz, 0);
+    ASSERT_LT(pkt_sz, 1024);
+    BridgeMessage result = serializer.deserialize(buffer, pkt_sz);
     ASSERT_EQ(msg.id, result.id);
     ASSERT_EQ(msg.type, result.type);
     ASSERT_EQ(msg.size(), result.size());
@@ -39,7 +43,11 @@ TEST_F(TestUnitZmqMessageSerializer, SerializationLoopWithMessage) {
     char text[] = "Stuff goes here";
     msg.set_data(text, sizeof(text));
 
-    BridgeMessage result = serializer.deserialize(serializer.serialize(msg));
+    char buffer[1024];
+    size_t pkt_sz = serializer.serialize(msg, buffer, 1024);
+    ASSERT_GT(pkt_sz, 0);
+    ASSERT_LT(pkt_sz, 1024);
+    BridgeMessage result = serializer.deserialize(buffer, pkt_sz);
     ASSERT_EQ(msg.id, result.id);
     ASSERT_EQ(msg.type, result.type);
     ASSERT_EQ(msg.size(), result.size());

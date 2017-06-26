@@ -12,7 +12,11 @@ namespace SIMUCOPTER {
         const BridgeMessageType type;
 
         BridgeMessage(BridgeMessageType msgtype, int msgid)
-                : type(msgtype), id(msgid), data_sz(0) {};
+                : type(msgtype), id(msgid), data_sz(0) {}
+
+        BridgeMessage(const BridgeMessage& other) : type(other.type), id(other.id) {
+            data_sz = other.load_data(data, BRIDGE_MSG_DATA_CAPACITY);
+        }
 
         /**
          * NOTE: This is not the size of the entire message!

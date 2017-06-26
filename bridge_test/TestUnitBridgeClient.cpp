@@ -34,7 +34,7 @@ namespace {
             zmq::message_t msg;
             depleted = !ssub->recv(&msg, ZMQ_NOBLOCK);
             if (!depleted) {
-                BridgeMessage bm = serializer.deserialize(msg);
+                BridgeMessage bm = serializer.deserialize(msg.data(), msg.size());
 //                printf(">> Caught a message! (%d) id:%d type:%d\n", *counter, bm.id, bm.type);
                 if (bm.id == COMMON_MSG_ID) {
                     (*counter)++;

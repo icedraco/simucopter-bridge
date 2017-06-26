@@ -35,16 +35,18 @@ int SIMUCOPTER::BridgeClient::request_int(int msgid) {
 bool SIMUCOPTER::BridgeClient::send_command(int msgid) {
     assert(is_initialized());
     BridgeMessage cmd(BridgeMessageType::COMMAND, msgid);
-    zmq::message_t zmq_msg = m_serializer.serialize(cmd);
-    return m_socket_cmdPublish.send(&zmq_msg, ZMQ_NOBLOCK) > 0;
+    char buffer[1024];
+    size_t pkt_sz = m_serializer.serialize(cmd, buffer, 1024);
+    return m_socket_cmdPublish.send(buffer, pkt_sz, ZMQ_NOBLOCK) > 0;
 }
 
 bool SIMUCOPTER::BridgeClient::send_command(int msgid, double arg1) {
     assert(is_initialized());
     BridgeMessage cmd(BridgeMessageType::COMMAND, msgid);
     cmd.set_data(&arg1, sizeof(arg1));
-    zmq::message_t zmq_msg = m_serializer.serialize(cmd);
-    return m_socket_cmdPublish.send(&zmq_msg, ZMQ_NOBLOCK) > 0;
+    char buffer[1024];
+    size_t pkt_sz = m_serializer.serialize(cmd, buffer, 1024);
+    return m_socket_cmdPublish.send(buffer, pkt_sz, ZMQ_NOBLOCK) > 0;
 }
 
 bool SIMUCOPTER::BridgeClient::send_command(int msgid, double arg1, double arg2) {
@@ -59,8 +61,9 @@ bool SIMUCOPTER::BridgeClient::send_command(int msgid, double arg1, double arg2)
     s_args.arg2 = arg2;
 
     cmd.set_data(&s_args, sizeof(s_args));
-    zmq::message_t zmq_msg = m_serializer.serialize(cmd);
-    return m_socket_cmdPublish.send(&zmq_msg, ZMQ_NOBLOCK) > 0;
+    char buffer[1024];
+    size_t pkt_sz = m_serializer.serialize(cmd, buffer, 1024);
+    return m_socket_cmdPublish.send(buffer, pkt_sz, ZMQ_NOBLOCK) > 0;
 }
 
 
@@ -68,16 +71,18 @@ bool SIMUCOPTER::BridgeClient::send_command(int msgid, double arg1, double arg2)
 
 BridgeMessage SIMUCOPTER::BridgeClient::request(int msgid) {
     assert(is_initialized());
-    BridgeMessage request(BridgeMessageType::REQUEST, msgid);
-    zmq::message_t zmq_msg_req = m_serializer.serialize(request);
-    m_socket_requests.send(&zmq_msg_req, ZMQ_NOBLOCK);
+    char buffer[1024];
+    size_t pkt_sz;
 
-    zmq::message_t msg;
-    assert(m_socket_requests.recv(&msg));
+    BridgeMessage req_msg(BridgeMessageType::REQUEST, msgid);
+    pkt_sz = m_serializer.serialize(req_msg, buffer, 1024);
+    m_socket_requests.send(buffer, pkt_sz, ZMQ_NOBLOCK);
 
-    BridgeMessage response = m_serializer.deserialize(msg);
+    pkt_sz = m_socket_requests.recv(buffer, 1024);
+    assert(pkt_sz > 0);
+
+    BridgeMessage response = m_serializer.deserialize(buffer, 1024);
     assert(response.type == BridgeMessageType::REPLY);
-    assert(response.id == request.id);
-
+    assert(response.id == msgid);
     return response;
 }

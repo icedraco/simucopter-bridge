@@ -8,12 +8,13 @@ void SIMUCOPTER::AbstractBridgeCommandHandler::init() {
 
 bool SIMUCOPTER::AbstractBridgeCommandHandler::handle_next() {
     assert(is_initialized());
-    zmq::message_t msg;
-    bool result = m_socket_cmdIn.recv(&msg, ZMQ_NOBLOCK);
-    if (result) {
-        const BridgeMessage cmd = m_serializer.deserialize(msg);
+    bool handled;
+    char buffer[1024];
+    size_t pkt_sz = m_socket_cmdIn.recv(buffer, 1024, ZMQ_NOBLOCK);
+    if ((handled = pkt_sz > 0)) {
+        const BridgeMessage cmd = m_serializer.deserialize(buffer, 1024);
         handle(cmd);
     }
 
-    return result;
+    return handled;
 }
