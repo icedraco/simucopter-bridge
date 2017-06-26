@@ -29,7 +29,7 @@ void SIMUCOPTER::ArduCopterRequestHandler::handle(const BridgeMessage &msg, Brid
     double result;
     float target_roll, target_pitch, target_yaw;  // desired angles (GET_DESIRED_*)
 
-    switch ((SimuCopterMessage)msg.type) {
+    switch ((SimuCopterMessage)msg.id) {
         case SimuCopterMessage::GET_FLIGHT_MODE:
             result = copter.control_mode;
             break;
