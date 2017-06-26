@@ -43,39 +43,3 @@ namespace SIMUCOPTER {
         BridgeClient* m_client;
     };
 }
-
-
-// C interface
-#ifdef __cplusplus
-extern "C" {
-#endif
-/*****************************************************************************\
- * Flight Mode Functions *****************************************************
-\*****************************************************************************/
-
-double __copter_get_accel_x();
-double __copter_get_accel_y();
-double __copter_get_accel_z();
-double __copter_get_gyro_x();
-double __copter_get_gyro_y();
-double __copter_get_gyro_z();
-double __copter_get_state_yaw();
-double __copter_get_state_roll();
-double __copter_get_state_pitch();
-double __copter_get_desired_yaw();
-double __copter_get_desired_roll();
-double __copter_get_desired_pitch();
-double __copter_get_desired_throttle();
-void __copter_set_rate_target_yaw(double yaw);
-void __copter_set_rate_target_pitch(double pitch);
-void __copter_set_rate_target_roll(double roll);
-void __copter_motors_set_roll(double roll);
-void __copter_motors_set_pitch(double pitch);
-void __copter_motors_set_yaw(double yaw);
-void __copter_motors_set_throttle(double throttle);
-void __copter_gcs_send_text(int severity, const char* str);
-double __sitl_whatever();
-
-#ifdef __cplusplus
-}
-#endif
