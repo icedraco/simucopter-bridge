@@ -12,7 +12,7 @@ namespace SIMUCOPTER {
     static const std::string ZMQ_SITL_CMD_DISPATCH_URL = "inproc://sitl_commands";
 
     static const int ZMQ_CMD_PUBLISH_TIMEOUT_MSEC = -1;
-    static const int ZMQ_CMD_DISPATCH_TIMEOUT_MSEC = 250;
+    static const int ZMQ_CMD_DISPATCH_TIMEOUT_MSEC = 500;
     static const int ZMQ_NUM_THREADS = 1;
     static const int MAX_MSG_PER_CYCLE = 5;  // messages per update() cycle
 

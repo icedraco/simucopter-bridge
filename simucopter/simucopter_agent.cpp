@@ -6,8 +6,8 @@ using namespace SIMUCOPTER;
 BridgeClient* G_CLIENT_ARDUPILOT = nullptr;
 BridgeClient* G_CLIENT_SITL = nullptr;
 
-SimulinkBridgeInterface* ardupilot = nullptr;
-SitlBridgeInterface* sitl = nullptr;
+SimulinkBridgeInterface* G_ARDUPILOT = nullptr;
+SitlBridgeInterface* G_SITL = nullptr;
 
 #ifdef __cplusplus
 extern "C" {
@@ -53,34 +53,40 @@ void simucopter_init(void) {
     run_ardupilot();
 
     //--- ArduPilot ---//
+    fprintf(stdout, "Creating client_ardupilot...\n"); fflush(stdout);
     BridgeClient* client_ardupilot = new BridgeClient(
             SIMUCOPTER::ZMQ_BRIDGE_REQ_URL,
             SIMUCOPTER::ZMQ_BRIDGE_CMD_URL);
     G_CLIENT_ARDUPILOT = client_ardupilot;
     G_CLIENT_ARDUPILOT->init();
 
+    fprintf(stdout, "Creating bi_ardupilot...\n"); fflush(stdout);
     SimulinkBridgeInterface *bi_ardupilot = new SimulinkBridgeInterface(G_CLIENT_ARDUPILOT);
-    ardupilot = bi_ardupilot;
+    G_ARDUPILOT = bi_ardupilot;
 
     //--- SITL ---//
+    fprintf(stdout, "Creating client_sitl...\n"); fflush(stdout);
     BridgeClient* client_sitl = new BridgeClient(
             SIMUCOPTER::ZMQ_SITL_REQ_URL,
             SIMUCOPTER::ZMQ_SITL_CMD_URL);
     G_CLIENT_SITL = client_sitl;
     G_CLIENT_SITL->init();
 
+    fprintf(stdout, "Creating bi_sitl...\n"); fflush(stdout);
     SitlBridgeInterface *bi_sitl = new SitlBridgeInterface(G_CLIENT_SITL);
-    sitl = bi_sitl;
+    G_SITL = bi_sitl;
+
+    fprintf(stdout, "simucopter_init() complete!\n"); fflush(stdout);
 }
 
 void simucopter_stop(void) {
     // TODO: send SHUTDOWN signal
 
-    if (ardupilot != nullptr)
-        delete ardupilot;
+    if (G_ARDUPILOT != nullptr)
+        delete G_ARDUPILOT;
 
-    if (sitl != nullptr)
-        delete sitl;
+    if (G_SITL != nullptr)
+        delete G_SITL;
 
     if (G_CLIENT_ARDUPILOT != nullptr)
         delete G_CLIENT_ARDUPILOT;
@@ -92,87 +98,87 @@ void simucopter_stop(void) {
 /*** FLIGHT MODE FUNCTIONS ***************************************************/
 
 double copter_get_accel_x() {
-    return ardupilot->get_accel_x();
+    return G_ARDUPILOT->get_accel_x();
 }
 
 double copter_get_accel_y() {
-    return ardupilot->get_accel_y();
+    return G_ARDUPILOT->get_accel_y();
 }
 
 double copter_get_accel_z() {
-    return ardupilot->get_accel_z();
+    return G_ARDUPILOT->get_accel_z();
 }
 
 double copter_get_gyro_x() {
-    return ardupilot->get_gyro_x();
+    return G_ARDUPILOT->get_gyro_x();
 }
 
 double copter_get_gyro_y() {
-    return ardupilot->get_gyro_y();
+    return G_ARDUPILOT->get_gyro_y();
 }
 
 double copter_get_gyro_z() {
-    return ardupilot->get_gyro_z();
+    return G_ARDUPILOT->get_gyro_z();
 }
 
 double copter_get_state_yaw() {
-    return ardupilot->get_state_yaw();
+    return G_ARDUPILOT->get_state_yaw();
 }
 
 double copter_get_state_roll() {
-    return ardupilot->get_state_roll();
+    return G_ARDUPILOT->get_state_roll();
 }
 
 double copter_get_state_pitch() {
-    return ardupilot->get_state_pitch();
+    return G_ARDUPILOT->get_state_pitch();
 }
 
 double copter_get_desired_yaw() {
-    return ardupilot->get_desired_yaw();
+    return G_ARDUPILOT->get_desired_yaw();
 }
 
 double copter_get_desired_roll() {
-    return ardupilot->get_desired_roll();
+    return G_ARDUPILOT->get_desired_roll();
 }
 
 double copter_get_desired_pitch() {
-    return ardupilot->get_desired_pitch();
+    return G_ARDUPILOT->get_desired_pitch();
 }
 
 double copter_get_desired_throttle() {
-    return ardupilot->get_desired_throttle();
+    return G_ARDUPILOT->get_desired_throttle();
 }
 
 void copter_set_rate_target_yaw(double yaw) {
-    ardupilot->set_rate_target_yaw(yaw);
+    G_ARDUPILOT->set_rate_target_yaw(yaw);
 }
 
 void copter_set_rate_target_pitch(double pitch) {
-    ardupilot->set_rate_target_pitch(pitch);
+    G_ARDUPILOT->set_rate_target_pitch(pitch);
 }
 
 void copter_set_rate_target_roll(double roll) {
-    ardupilot->set_rate_target_roll(roll);
+    G_ARDUPILOT->set_rate_target_roll(roll);
 }
 
 void copter_motors_set_roll(double roll) {
-    ardupilot->motors_set_roll(roll);
+    G_ARDUPILOT->motors_set_roll(roll);
 }
 
 void copter_motors_set_pitch(double pitch) {
-    ardupilot->motors_set_pitch(pitch);
+    G_ARDUPILOT->motors_set_pitch(pitch);
 }
 
 void copter_motors_set_yaw(double yaw) {
-    ardupilot->motors_set_yaw(yaw);
+    G_ARDUPILOT->motors_set_yaw(yaw);
 }
 
 void copter_motors_set_throttle(double throttle) {
-    ardupilot->motors_set_throttle(throttle);
+    G_ARDUPILOT->motors_set_throttle(throttle);
 }
 
 double sitl_whatever() {
-    return sitl->whatever();
+    return G_SITL->whatever();
 }
 
 #ifdef __cplusplus

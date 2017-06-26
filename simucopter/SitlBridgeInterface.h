@@ -17,6 +17,7 @@ namespace SIMUCOPTER {
             assert(client->is_initialized());
         }
 
+
         inline int whatever() { return m_client->request_int(SimuCopterMessage::SITL_WHATEVER); };
 
     private:
