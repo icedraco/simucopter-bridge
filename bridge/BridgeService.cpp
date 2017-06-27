@@ -26,23 +26,25 @@ bool SIMUCOPTER::BridgeService::update(void) {
     bool handled = false;
     bool flag_depleted;
 
+    char buffer[1024];
+    size_t msg_sz, pkt_sz;
+
     // handle incoming requests from Simulink getter blocks
     // these blocks will stop the agent until they get a response, so they must
     // be served ASAP - we do it here through AbstractBridgeRequestHandler map
     flag_depleted = false;
     for (int i = 0; !flag_depleted && i < MAX_MSG_PER_CYCLE; i++) {
-        char buffer[1024];
-        size_t msg_size = m_socket_requestHandler.recv(&buffer, 1024, ZMQ_NOBLOCK);
-        if (msg_size > 0) {
-            BridgeMessage request = m_serializer.deserialize(buffer, msg_size);
+        msg_sz = m_socket_requestHandler.recv(buffer, 1024, ZMQ_NOBLOCK);
+        if (msg_sz > 0) {
+            BridgeMessage request = m_serializer.deserialize(buffer, msg_sz);
 
             assert(request.type == BridgeMessageType::REQUEST);
 
             BridgeMessage response = request.get_reply();
             handler(request.id).handle(request, response);
 
-            size_t pkt_sz = m_serializer.serialize(response, buffer, 1024);
-            m_socket_requestHandler.send(&buffer, pkt_sz, ZMQ_NOBLOCK);
+            pkt_sz = m_serializer.serialize(response, buffer, 1024);
+            m_socket_requestHandler.send(buffer, pkt_sz, ZMQ_NOBLOCK);
             handled = true;
         } else {
             flag_depleted = true;
@@ -55,9 +57,8 @@ bool SIMUCOPTER::BridgeService::update(void) {
     // be dropped, which is OK.
     flag_depleted = false;
     for (int i = 0; !flag_depleted && i < MAX_MSG_PER_CYCLE; i++) {
-        zmq::message_t cmd_msg;
-        if (m_socket_cmdReceiver.recv(&cmd_msg, ZMQ_NOBLOCK)) {
-            m_socket_cmdOut.send(&cmd_msg, ZMQ_NOBLOCK);
+        if ((msg_sz = m_socket_cmdReceiver.recv(buffer, 1024, ZMQ_NOBLOCK)) > 0) {
+            m_socket_cmdOut.send(buffer, msg_sz, ZMQ_NOBLOCK);
             handled = true;
         } else {
             flag_depleted = true;
