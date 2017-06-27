@@ -17,8 +17,17 @@ namespace SIMUCOPTER {
             assert(client->is_initialized());
         }
 
-
-        inline int whatever() { return m_client->request_int(SimuCopterMessage::SITL_WHATEVER); };
+        inline double get_state_yaw() { return m_client->request_double(SimuCopterMessage::SITL_GET_STATE_YAW); }
+        inline double get_state_roll() { return m_client->request_double(SimuCopterMessage::SITL_GET_STATE_ROLL); }
+        inline double get_state_pitch() { return m_client->request_double(SimuCopterMessage::SITL_GET_STATE_PITCH); }
+        inline double get_accel_x() { return m_client->request_double(SimuCopterMessage::SITL_GET_ACCEL_X); }
+        inline double get_accel_y() { return m_client->request_double(SimuCopterMessage::SITL_GET_ACCEL_Y); }
+        inline double get_accel_z() { return m_client->request_double(SimuCopterMessage::SITL_GET_ACCEL_Z); }
+        inline double get_gyro_x() { return m_client->request_double(SimuCopterMessage::SITL_GET_GYRO_X); }
+        inline double get_gyro_y() { return m_client->request_double(SimuCopterMessage::SITL_GET_GYRO_Y); }
+        inline double get_gyro_z() { return m_client->request_double(SimuCopterMessage::SITL_GET_GYRO_Z); }
+        inline double get_height() { return m_client->request_double(SimuCopterMessage::SITL_GET_HEIGHT); }
+        inline double get_heading() { return m_client->request_double(SimuCopterMessage::SITL_GET_HEADING); }
 
     private:
         BridgeClient* m_client;

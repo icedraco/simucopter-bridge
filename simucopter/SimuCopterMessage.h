@@ -34,6 +34,17 @@ namespace SIMUCOPTER {
 
         GCS_SEND_TEXT         = 0x2001,
 
-        SITL_WHATEVER         = 0x3000,
+        SITL_GET_ACCEL_X      = 0x3001,
+        SITL_GET_ACCEL_Y      = 0x3002,
+        SITL_GET_ACCEL_Z      = 0x3003,
+        SITL_GET_GYRO_X       = 0x3011,
+        SITL_GET_GYRO_Y       = 0x3012,
+        SITL_GET_GYRO_Z       = 0x3013,
+        SITL_GET_STATE_YAW    = 0x3031,
+        SITL_GET_STATE_ROLL   = 0x3032,
+        SITL_GET_STATE_PITCH  = 0x3033,
+
+        SITL_GET_HEIGHT       = 0x3041,
+        SITL_GET_HEADING      = 0x3042,
     };
 }
