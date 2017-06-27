@@ -17,23 +17,7 @@ SitlBridgeInterface* G_SITL = nullptr;
 extern "C" {
 #endif
 
-static void run_ardupilot(void) {
-    // executed by flight mode init function: SomeFlightMode_init()
-
-    uid_t uid;
-
-    // --> find the name of current executable (i.e., flight mode name hint)
-    char exe[1024];
-    ssize_t len = readlink("/proc/self/exe", exe, 1024);
-    if (len != -1) {
-        exe[len] = '\0';
-    } else {
-        exe[0] = '\0';
-        perror("readlink");
-        exit(1);
-    }
-
-    // --> launch simutool
+static void bash(const char* full_path) {
     pid_t pid = fork();
 
     // fork() failed
@@ -45,12 +29,20 @@ static void run_ardupilot(void) {
     // this is a child process
     if (pid == 0) {
         // NOTE: USE ABSOLUTE PATHS!
-        execl("/usr/bin/env", "bash", "/home/pi/simucopter/run-arducopter.sh", (char *) 0);
+        execl("/usr/bin/env", "bash", full_path, (char *) 0);
 
         // execl() should not return, but if it does...
         perror("execl");
         exit(2);
     }
+}
+
+inline static void run_ardupilot(void) {
+    bash("/home/pi/simucopter/run-arducopter.sh");
+}
+
+inline static void kill_ardupilot(void) {
+    bash("/home/pi/simucopter/kill-arducopter.sh");
 }
 
 void simucopter_init(void) {
@@ -84,8 +76,6 @@ void simucopter_init(void) {
 }
 
 void simucopter_stop(void) {
-    // TODO: send SHUTDOWN signal
-
     if (G_ARDUPILOT != nullptr)
         delete G_ARDUPILOT;
 
@@ -97,6 +87,9 @@ void simucopter_stop(void) {
 
     if (G_CLIENT_SITL!= nullptr)
         delete G_CLIENT_SITL;
+
+    // kill ardupilot
+    kill_ardupilot();
 }
 
 /*** FLIGHT MODE FUNCTIONS ***************************************************/
