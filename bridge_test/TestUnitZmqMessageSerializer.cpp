@@ -5,7 +5,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "ZmqBridgeMessageSerializer.h"
+#include <bridge/ZmqBridgeMessageSerializer.h>
 
 using testing::Eq;
 using SIMUCOPTER::BridgeMessage;

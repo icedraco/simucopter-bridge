@@ -3,6 +3,8 @@
 // FIXME: This is needed to access some of Copter.h data
 #define private public
 
+#include <map>
+#include <assert.h>
 #include <bridge/AbstractBridgeCommandHandler.h>
 #include "SimuCopterMessage.h"
 #include "Copter.h"
@@ -30,8 +32,21 @@ namespace SIMUCOPTER {
          */
         virtual void handle(const BridgeMessage& cmd);
 
+        /**
+         * Triggered every flight mode cycle.
+         * Its purpose is to update all the attitude values from buffer.
+         */
+        void tick(void);
+
+        /**
+         * Triggered by flight mode shut down; purges all currently stored values
+         * from the command buffer.
+         */
+        void flush(void) { m_commandBuffer.clear(); }
+
     private:
         bool m_shutdown = false;
+        std::map<int, double> m_commandBuffer;
     };
 
 }

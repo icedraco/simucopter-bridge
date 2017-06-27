@@ -1,5 +1,14 @@
 #pragma once
 
+//
+// This file is used by the Simulink itself, where it translates blocks into
+// calls to functions mentioned in this header file.
+//
+// This is another integration point of sorts with Simulink
+//
+// To see implementation of these functions, see simucopter-agent.cpp
+//
+
 #ifdef __cplusplus
 
 #include "SimulinkBridgeInterface.h"

@@ -6,7 +6,7 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "BridgeService.h"
+#include <bridge/BridgeService.h>
 #include "test-common.h"
 
 using testing::Eq;

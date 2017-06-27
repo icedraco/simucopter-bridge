@@ -4,8 +4,7 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-
-#include "BridgeMessage.h"
+#include <bridge/BridgeMessage.h>
 
 using testing::Eq;
 using SIMUCOPTER::BridgeMessage;

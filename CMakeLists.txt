@@ -20,7 +20,7 @@ set(SOURCE_FILES_BRIDGE
         bridge/BridgeService.cpp bridge/BridgeService.h bridge_test/TestUnitBridgeService.cpp
         bridge/ZmqBridgeMessageSerializer.cpp bridge/ZmqBridgeMessageSerializer.h bridge_test/TestUnitZmqMessageSerializer.cpp
         bridge_test/test-common.h
-        bridge_test/TestIntBridgeClientAndService.cpp simucopter/simucopter-agent.cpp simucopter/SitlBridgeInterface.h simucopter/SitlRequestHandler.cpp simucopter/SitlRequestHandler.h simucopter/simucopter-sitl.cpp simucopter/simucopter-sitl.h)
+        bridge_test/TestIntBridgeClientAndService.cpp)
 
 # simucopter source
 # TODO: Some of these sources can't be compiled locally without ArduPilot code - deal with it somehow

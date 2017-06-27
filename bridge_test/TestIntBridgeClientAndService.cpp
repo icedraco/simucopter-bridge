@@ -6,10 +6,9 @@
 #include <thread>
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-#include <AbstractBridgeCommandHandler.h>
-
-#include "BridgeClient.h"
-#include "BridgeService.h"
+#include <bridge/AbstractBridgeCommandHandler.h>
+#include <bridge/BridgeClient.h>
+#include <bridge/BridgeService.h>
 #include "test-common.h"
 
 using testing::Eq;
@@ -33,8 +32,21 @@ namespace {
     class DummyCommandHandler: public SIMUCOPTER::AbstractBridgeCommandHandler {
     public:
         int last_id = -1;
+        double last_arg1 = -1.0;
+        double last_arg2 = -1.0;
+
         void handle(const BridgeMessage& msg) {
+            struct {
+                double arg1;
+                double arg2;
+            } arg_s;
+            arg_s.arg1 = -1.0;
+            arg_s.arg2 = -1.0;
+
             last_id = msg.id;
+            msg.load_data(&arg_s, sizeof(arg_s));
+            last_arg1 = arg_s.arg1;
+            last_arg2 = arg_s.arg2;
         }
     };
 
@@ -140,7 +152,7 @@ TEST_F(TestIntBridgeClientAndService, CommandChannelPassesAllMessages) {
     usleep(500000);
     ASSERT_TRUE(client.send_command(0x1000));
     ASSERT_TRUE(client.send_command(0x1001, 0.01));
-    ASSERT_TRUE(client.send_command(0x1002, 0.01, 0.02));
+    ASSERT_TRUE(client.send_command(0x1002, 0.02, 0.03));
 
     t.join();
 
@@ -148,7 +160,10 @@ TEST_F(TestIntBridgeClientAndService, CommandChannelPassesAllMessages) {
     ASSERT_EQ(0x1000, handler.last_id);
     ASSERT_TRUE(handler.handle_next());
     ASSERT_EQ(0x1001, handler.last_id);
+    ASSERT_EQ(0.01, handler.last_arg1);
     ASSERT_TRUE(handler.handle_next());
     ASSERT_EQ(0x1002, handler.last_id);
+    ASSERT_EQ(0.02, handler.last_arg1);
+    ASSERT_EQ(0.03, handler.last_arg2);
     ASSERT_FALSE(handler.handle_next());
 }

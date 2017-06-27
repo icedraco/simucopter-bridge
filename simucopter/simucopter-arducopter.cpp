@@ -13,13 +13,13 @@
 
 namespace SIMUCOPTER {
     // provides message I/O between Simulink Agent and ArduCopter
-    BridgeService            simucopter_bridge_service(ZMQ_BRIDGE_REQ_URL, ZMQ_BRIDGE_CMD_URL, ZMQ_BRIDGE_CMD_DISPATCH_URL);
+    BridgeService simucopter_bridge_service(ZMQ_BRIDGE_REQ_URL, ZMQ_BRIDGE_CMD_URL, ZMQ_BRIDGE_CMD_DISPATCH_URL);
 
     // handles incoming REQUEST messages via a BridgeService instance
     ArduCopterRequestHandler simucopter_request_handler;
 
     // see request_thread()
-	std::thread*             simucopter_request_thread;
+	std::thread* simucopter_request_thread;
 
 
     void request_thread(void) {

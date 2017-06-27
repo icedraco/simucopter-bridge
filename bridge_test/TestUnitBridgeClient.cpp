@@ -5,8 +5,7 @@
 #include <thread>
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-
-#include "BridgeClient.h"
+#include <bridge/BridgeClient.h>
 
 using testing::Eq;
 using SIMUCOPTER::BridgeClient;

@@ -4,8 +4,7 @@
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-
-#include "AbstractBridgeCommandHandler.h"
+#include <bridge/AbstractBridgeCommandHandler.h>
 
 using testing::Eq;
 using SIMUCOPTER::AbstractBridgeCommandHandler;
