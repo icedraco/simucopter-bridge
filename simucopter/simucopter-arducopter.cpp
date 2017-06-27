@@ -5,6 +5,7 @@
 // the entire SimuCopter system along with its communication bridge.
 //
 
+#include <unistd.h>
 #include <thread>
 #include <bridge/BridgeService.h>
 
