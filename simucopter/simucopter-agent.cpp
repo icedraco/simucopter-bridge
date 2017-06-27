@@ -1,4 +1,8 @@
 #include <unistd.h>
+#include <cstdio>
+#include <cstdlib>
+
+#include "BridgeClient.h"  // NOTE: not "bridge/" because Simulink flattens lib directories!!
 #include "simucopter.h"
 
 using namespace SIMUCOPTER;
@@ -177,8 +181,51 @@ void copter_motors_set_throttle(double throttle) {
     G_ARDUPILOT->motors_set_throttle(throttle);
 }
 
-double sitl_whatever() {
-    return G_SITL->whatever();
+
+/*** SITL FUNCTIONS **********************************************************/
+
+double sitl_get_state_yaw() {
+    return G_SITL->get_state_yaw();
+}
+
+double sitl_get_state_roll() {
+    return G_SITL->get_state_roll();
+}
+
+double sitl_get_state_pitch() {
+    return G_SITL->get_state_pitch();
+}
+
+double sitl_get_accel_x() {
+    return G_SITL->get_accel_x();
+}
+
+double sitl_get_accel_y() {
+    return G_SITL->get_accel_y();
+}
+
+double sitl_get_accel_z() {
+    return G_SITL->get_accel_z();
+}
+
+double sitl_get_gyro_x() {
+    return G_SITL->get_gyro_x();
+}
+
+double sitl_get_gyro_y() {
+    return G_SITL->get_gyro_y();
+}
+
+double sitl_get_gyro_z() {
+    return G_SITL->get_gyro_z();
+}
+
+double sitl_get_height() {
+    return G_SITL->get_height();
+}
+
+double sitl_get_heading() {
+    return G_SITL->get_heading();
 }
 
 #ifdef __cplusplus

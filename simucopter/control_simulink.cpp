@@ -1,5 +1,6 @@
 //
-// This file contains ArduPilot flight mode for SIMULINK
+// This file contains ArduPilot flight mode for SIMULINK, and should be placed
+// in ardupilot/ArduCopter/
 //
 
 #include "ArduCopterCommandHandler.h"
