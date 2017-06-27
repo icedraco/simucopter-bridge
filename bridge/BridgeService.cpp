@@ -2,9 +2,12 @@
 
 void SIMUCOPTER::BridgeService::init(void) {
     if (!is_initialized()) {
+        printf("BridgeService -> binding to: %s, %s, %s\n",
+               m_cmdAddrUrl.c_str(), m_reqAddrUrl.c_str(), m_dispatchAddrUrl.c_str());
+
         m_socket_cmdReceiver.bind(m_cmdAddrUrl.c_str());
         m_socket_requestHandler.bind(m_reqAddrUrl.c_str());
-        m_socket_cmdOut.bind(ZMQ_BRIDGE_CMD_DISPATCH_URL.c_str());
+        m_socket_cmdOut.bind(m_dispatchAddrUrl.c_str());
         m_initialized = true;
     }
 }
@@ -32,12 +35,6 @@ bool SIMUCOPTER::BridgeService::update(void) {
         size_t msg_size = m_socket_requestHandler.recv(&buffer, 1024, ZMQ_NOBLOCK);
         if (msg_size > 0) {
             BridgeMessage request = m_serializer.deserialize(buffer, msg_size);
-
-            // TODO: REMOVE THIS - DEBUG CODE
-            if (request.type != BridgeMessageType::REQUEST) {
-                fprintf(stderr, "\nWARNING: BridgeService::update() RECEIVED NON-REQUEST -> type=%d, id=0x%x\n", request.type, request.id);
-                fflush(stderr);
-            }
 
             assert(request.type == BridgeMessageType::REQUEST);
 

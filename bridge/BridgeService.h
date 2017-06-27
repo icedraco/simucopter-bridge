@@ -33,12 +33,15 @@ namespace SIMUCOPTER {
          *
          * @param req_url ZMQ URL for listening to requests
          * @param cmd_url ZMQ URL for listening to commands
+         * @param dispatch_url ZMQ URL for dispatching commands to flight mode
          */
         BridgeService(
                 const std::string req_url = ZMQ_BRIDGE_REQ_URL,
-                const std::string cmd_url = ZMQ_BRIDGE_CMD_URL) :
+                const std::string cmd_url = ZMQ_BRIDGE_CMD_URL,
+                const std::string dispatch_url = ZMQ_BRIDGE_CMD_DISPATCH_URL) :
                 m_reqAddrUrl(req_url),
                 m_cmdAddrUrl(cmd_url),
+                m_dispatchAddrUrl(dispatch_url),
                 m_serializer(),
                 m_defaultHandler(new ZeroRequestHandler()),
                 m_context(ZmqContextContainer::get_context()),
@@ -46,6 +49,7 @@ namespace SIMUCOPTER {
                 m_socket_cmdReceiver(m_context, ZMQ_SUB),
                 m_socket_cmdOut(m_context, ZMQ_PUB)
         {
+            printf("DEBUG: BridgeService(%s, %s)\n", req_url.c_str(), cmd_url.c_str());
             m_socket_cmdReceiver.setsockopt(ZMQ_SUBSCRIBE, "", 0);
             m_socket_cmdReceiver.setsockopt(ZMQ_RCVTIMEO, &ZMQ_CMD_PUBLISH_TIMEOUT_MSEC, sizeof(ZMQ_CMD_PUBLISH_TIMEOUT_MSEC));
             m_socket_cmdOut.setsockopt(ZMQ_SNDTIMEO, &ZMQ_CMD_DISPATCH_TIMEOUT_MSEC, sizeof(ZMQ_CMD_DISPATCH_TIMEOUT_MSEC));
@@ -116,6 +120,7 @@ namespace SIMUCOPTER {
     private:
         const std::string m_reqAddrUrl; // listening address for request handler
         const std::string m_cmdAddrUrl; // listening address for command dispatcher
+        const std::string m_dispatchAddrUrl; // publishing address for command dispatcher
 
         const ZmqBridgeMessageSerializer m_serializer;
 
