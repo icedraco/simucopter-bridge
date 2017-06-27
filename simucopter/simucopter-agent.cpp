@@ -130,6 +130,10 @@ double copter_get_state_pitch() {
     return G_ARDUPILOT->get_state_pitch();
 }
 
+double copter_get_state_throttle() {
+    return G_ARDUPILOT->get_state_throttle();
+}
+
 double copter_get_desired_yaw() {
     return G_ARDUPILOT->get_desired_yaw();
 }

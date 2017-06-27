@@ -27,6 +27,7 @@ namespace SIMUCOPTER {
         inline double get_state_yaw() { return m_client->request_double(SimuCopterMessage::GET_STATE_YAW); };
         inline double get_state_roll() { return m_client->request_double(SimuCopterMessage::GET_STATE_ROLL); };
         inline double get_state_pitch() { return m_client->request_double(SimuCopterMessage::GET_STATE_PITCH); };
+        inline double get_state_throttle() { return m_client->request_double(SimuCopterMessage::GET_STATE_THROTTLE); };
         inline double get_desired_yaw() { return m_client->request_double(SimuCopterMessage::GET_DESIRED_YAW); };
         inline double get_desired_roll() { return m_client->request_double(SimuCopterMessage::GET_DESIRED_ROLL); };
         inline double get_desired_pitch() { return m_client->request_double(SimuCopterMessage::GET_DESIRED_PITCH); };

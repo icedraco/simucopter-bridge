@@ -18,6 +18,7 @@ void SIMUCOPTER::ArduCopterRequestHandler::register_self(BridgeService &service)
     service.set_request_handler(SimuCopterMessage::GET_STATE_YAW, this);
     service.set_request_handler(SimuCopterMessage::GET_STATE_ROLL, this);
     service.set_request_handler(SimuCopterMessage::GET_STATE_PITCH, this);
+    service.set_request_handler(SimuCopterMessage::GET_STATE_THROTTLE, this);
     service.set_request_handler(SimuCopterMessage::GET_DESIRED_YAW, this);
     service.set_request_handler(SimuCopterMessage::GET_DESIRED_ROLL, this);
     service.set_request_handler(SimuCopterMessage::GET_DESIRED_PITCH, this);
@@ -59,15 +60,19 @@ void SIMUCOPTER::ArduCopterRequestHandler::handle(const BridgeMessage &msg, Brid
             break;
 
         case SimuCopterMessage::GET_STATE_YAW:
-            result = copter.ahrs.yaw;
+            result = copter.motors->get_yaw();
             break;
 
         case SimuCopterMessage::GET_STATE_ROLL:
-            result = copter.ahrs.roll;
+            result = copter.motors->get_roll();
             break;
 
         case SimuCopterMessage::GET_STATE_PITCH:
-            result = copter.ahrs.pitch;
+            result = copter.motors->get_pitch();
+            break;
+
+        case SimuCopterMessage::GET_STATE_THROTTLE:
+            result = copter.motors->get_throttle();
             break;
 
         case SimuCopterMessage::GET_DESIRED_YAW:

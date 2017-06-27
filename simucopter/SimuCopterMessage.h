@@ -19,6 +19,7 @@ namespace SIMUCOPTER {
         GET_STATE_YAW         = 0x1031,
         GET_STATE_ROLL        = 0x1032,
         GET_STATE_PITCH       = 0x1033,
+        GET_STATE_THROTTLE    = 0x1034,
         GET_DESIRED_YAW       = 0x1041,
         GET_DESIRED_ROLL      = 0x1042,
         GET_DESIRED_PITCH     = 0x1043,

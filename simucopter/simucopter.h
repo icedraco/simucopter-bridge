@@ -27,6 +27,7 @@ double copter_get_gyro_z();
 double copter_get_state_yaw();
 double copter_get_state_roll();
 double copter_get_state_pitch();
+double copter_get_state_throttle();
 double copter_get_desired_yaw();
 double copter_get_desired_roll();
 double copter_get_desired_pitch();
