@@ -23,6 +23,7 @@ void SIMUCOPTER::ArduCopterRequestHandler::register_self(BridgeService &service)
     service.set_request_handler(SimuCopterMessage::GET_DESIRED_ROLL, this);
     service.set_request_handler(SimuCopterMessage::GET_DESIRED_PITCH, this);
     service.set_request_handler(SimuCopterMessage::GET_DESIRED_THROTTLE, this);
+    service.set_request_handler(SimuCopterMessage::GET_HEADING, this);
 }
 
 void SIMUCOPTER::ArduCopterRequestHandler::handle(const BridgeMessage &msg, BridgeMessage &response) {
@@ -111,6 +112,13 @@ void SIMUCOPTER::ArduCopterRequestHandler::handle(const BridgeMessage &msg, Brid
         case SimuCopterMessage::GET_DESIRED_THROTTLE:
             result = copter.get_pilot_desired_throttle(copter.channel_throttle->control_in);
             break;
+
+        case SimuCopterMessage::GET_HEADING:
+        {
+            Matrix3f m = copter.ahrs.get_rotation_body_to_ned();
+            result = copter.compass.calculate_heading(m) * 57.2957795131;
+            break;
+        }
 
         default:
             /**
