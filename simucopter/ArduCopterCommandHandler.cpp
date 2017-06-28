@@ -78,6 +78,9 @@ static void do_handle(int cmdid, double arg) {
 
 
 void SIMUCOPTER::ArduCopterCommandHandler::tick(void) {
+    copter.set_land_complete(false);
+    copter.motors->set_desired_spool_state(AP_Motors::DESIRED_THROTTLE_UNLIMITED);
+
     for (auto iter = m_commandBuffer.begin(); iter != m_commandBuffer.end(); ++iter)
         do_handle(iter->first, iter->second);
     copter.motors->output();
