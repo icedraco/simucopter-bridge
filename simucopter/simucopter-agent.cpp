@@ -38,7 +38,11 @@ static void bash(const char* full_path) {
 }
 
 inline static void run_ardupilot(void) {
+#ifdef ARDUCOPTER_NAVIO
+    bash("/home/pi/simucopter/run-arducopter-navio.sh");
+#else 
     bash("/home/pi/simucopter/run-arducopter.sh");
+#endif
 }
 
 inline static void kill_ardupilot(void) {
@@ -149,7 +153,9 @@ double copter_get_desired_pitch() {
 double copter_get_desired_throttle() {
     return G_ARDUPILOT->get_desired_throttle();
 }
-
+double copter_get_heading() {
+    return G_ARDUPILOT->get_heading();
+}
 void copter_set_rate_target_yaw(double yaw) {
     G_ARDUPILOT->set_rate_target_yaw(yaw);
 }
@@ -177,6 +183,7 @@ void copter_motors_set_yaw(double yaw) {
 void copter_motors_set_throttle(double throttle) {
     G_ARDUPILOT->motors_set_throttle(throttle);
 }
+
 
 
 /*** SITL FUNCTIONS **********************************************************/

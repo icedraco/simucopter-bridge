@@ -41,6 +41,7 @@ double copter_get_desired_yaw();
 double copter_get_desired_roll();
 double copter_get_desired_pitch();
 double copter_get_desired_throttle();
+double copter_get_heading();
 void copter_set_rate_target_yaw(double yaw);
 void copter_set_rate_target_pitch(double pitch);
 void copter_set_rate_target_roll(double roll);

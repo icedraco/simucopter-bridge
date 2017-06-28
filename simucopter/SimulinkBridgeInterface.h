@@ -32,6 +32,7 @@ namespace SIMUCOPTER {
         inline double get_desired_roll() { return m_client->request_double(SimuCopterMessage::GET_DESIRED_ROLL); };
         inline double get_desired_pitch() { return m_client->request_double(SimuCopterMessage::GET_DESIRED_PITCH); };
         inline double get_desired_throttle() { return m_client->request_double(SimuCopterMessage::GET_DESIRED_THROTTLE); };
+        inline double get_heading() { return m_client->request_double(SimuCopterMessage::GET_HEADING); };
         inline void set_rate_target_yaw(double yaw) { m_client->send_command(SimuCopterMessage::SET_RATE_TARGET_YAW, yaw); };
         inline void set_rate_target_pitch(double pitch) { m_client->send_command(SimuCopterMessage::SET_RATE_TARGET_PITCH, pitch); };
         inline void set_rate_target_roll(double roll) { m_client->send_command(SimuCopterMessage::SET_RATE_TARGET_ROLL, roll); };

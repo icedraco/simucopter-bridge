@@ -24,6 +24,7 @@ namespace SIMUCOPTER {
         GET_DESIRED_ROLL      = 0x1042,
         GET_DESIRED_PITCH     = 0x1043,
         GET_DESIRED_THROTTLE  = 0x1044,
+        GET_HEADING           = 0x1045,
 
         SET_RATE_TARGET_YAW   = 0x1051,
         SET_RATE_TARGET_ROLL  = 0x1052,
