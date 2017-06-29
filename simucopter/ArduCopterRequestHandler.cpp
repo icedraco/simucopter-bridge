@@ -61,15 +61,18 @@ void SIMUCOPTER::ArduCopterRequestHandler::handle(const BridgeMessage &msg, Brid
             break;
 
         case SimuCopterMessage::GET_STATE_YAW:
-            result = copter.motors->get_yaw();
+//            result = copter.motors->get_yaw();
+            result = copter.ahrs.yaw;
             break;
 
         case SimuCopterMessage::GET_STATE_ROLL:
-            result = copter.motors->get_roll();
+//            result = copter.motors->get_roll();
+            result = copter.ahrs.roll;
             break;
 
         case SimuCopterMessage::GET_STATE_PITCH:
-            result = copter.motors->get_pitch();
+//            result = copter.motors->get_pitch();
+            result = copter.ahrs.pitch;
             break;
 
         case SimuCopterMessage::GET_STATE_THROTTLE:
