@@ -15,7 +15,7 @@ namespace SIMUCOPTER {
                 : type(msgtype), id(msgid), data_sz(0) {}
 
         BridgeMessage(const BridgeMessage& other) : type(other.type), id(other.id) {
-            data_sz = other.load_data(data, BRIDGE_MSG_DATA_CAPACITY);
+            data_sz = other.load_data(m_data, BRIDGE_MSG_DATA_CAPACITY);
         }
 
         /**
@@ -23,6 +23,11 @@ namespace SIMUCOPTER {
          * @return size of the message data in bytes
          */
         inline size_t size(void) const { return data_sz; }
+
+        /**
+         * @return read-only-constrained pointer to the internal data buffer
+         */
+        inline const void* data(void) const { return (void*)m_data; }
 
         /**
          * Set raw data for this message
@@ -60,6 +65,6 @@ namespace SIMUCOPTER {
 
     private:
         size_t data_sz;
-        char data[BRIDGE_MSG_DATA_CAPACITY];
+        char m_data[BRIDGE_MSG_DATA_CAPACITY];
     };
 }

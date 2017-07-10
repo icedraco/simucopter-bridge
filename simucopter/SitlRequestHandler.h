@@ -39,6 +39,8 @@ namespace SIMUCOPTER {
         SITL::SITL* m_sitl = nullptr;
         SITL::Aircraft* m_sitl_model = nullptr;
         AP_Baro* m_barometer = nullptr;
+
+        const ArgumentPacker m_packer;
     };
 
 }

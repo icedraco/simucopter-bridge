@@ -6,6 +6,7 @@
 #include <map>
 #include <assert.h>
 #include <bridge/AbstractBridgeCommandHandler.h>
+#include <bridge/ArgumentPacker.h>
 #include "SimuCopterMessage.h"
 #include "Copter.h"
 
@@ -47,6 +48,7 @@ namespace SIMUCOPTER {
     private:
         bool m_shutdown = false;
         std::map<int, double> m_commandBuffer;
+        ArgumentPacker m_packer;
     };
 
 }

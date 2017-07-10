@@ -103,5 +103,7 @@ void SIMUCOPTER::SitlRequestHandler::handle(const BridgeMessage& msg, BridgeMess
             result = -999;
     }
 
-    response.set_data(&result, sizeof(result));
+    char buffer[BRIDGE_MSG_DATA_CAPACITY];
+    size_t packed_sz = m_packer.pack(buffer, BRIDGE_MSG_DATA_CAPACITY, result);
+    response.set_data(&buffer, packed_sz);
 }

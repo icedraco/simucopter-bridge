@@ -1,42 +1,5 @@
 #include "ArduCopterCommandHandler.h"
 
-// TODO: Argument packing should be "standardized" as time permits... this is ugly
-static void extract_args(const BridgeMessage& cmd, int num_args, double* arg1, double* arg2, double* arg3) {
-    if (num_args < 1)
-        return;
-
-    if (num_args > 3)
-        num_args = 3;
-
-    struct {
-        double arg1;
-        double arg2;
-        double arg3;
-    } arg_s;
-
-    switch(num_args) {
-        case 1:
-            assert(arg1 != nullptr);
-            cmd.load_data(arg1, sizeof(double));
-            break;
-
-        case 2:
-        case 3:
-            memset(&arg_s, 0, sizeof(arg_s));
-            cmd.load_data(&arg_s, sizeof(arg_s));
-            if (arg1 != nullptr)
-                *arg1 = arg_s.arg1;
-            if (arg2 != nullptr)
-                *arg2 = arg_s.arg2;
-            if (arg3 != nullptr)
-                *arg3 = arg_s.arg3;
-            break;
-
-        default:
-            assert(false);
-    }
-}
-
 
 // TODO: Implement this a bit better than a static function...
 static void do_handle(int cmdid, double arg) {
@@ -113,7 +76,7 @@ void SIMUCOPTER::ArduCopterCommandHandler::handle(const BridgeMessage &cmd) {
         case SimuCopterMessage::SET_MOTORS_ROLL:
         case SimuCopterMessage::SET_MOTORS_PITCH:
         case SimuCopterMessage::SET_MOTORS_THROTTLE:
-            extract_args(cmd, 1, &arg1, &arg2, &arg3);
+            m_packer.unpack(cmd.data(), cmd.size(), &arg1);
             m_commandBuffer[cmd.id] = arg1;
             break;
 
