@@ -12,6 +12,7 @@
 
 using testing::Eq;
 using SIMUCOPTER::ArgumentPacker;
+using SIMUCOPTER::int_arg1_envelope_s;
 using SIMUCOPTER::arg1_envelope_s;
 using SIMUCOPTER::arg2_envelope_s;
 using SIMUCOPTER::arg3_envelope_s;
@@ -48,7 +49,7 @@ namespace {
 }
 
 
-TEST_F(TestUnitArgumentPacker, TestPackUnpackArg1) {
+TEST_F(TestUnitArgumentPacker, TestPackUnpackDoubleArg1) {
     assert(sizeof(buffer) >= TUAP_BUFFER_SIZE);
     double arg = 0;
 
@@ -58,7 +59,7 @@ TEST_F(TestUnitArgumentPacker, TestPackUnpackArg1) {
     ASSERT_EQ(arg, 13.37);
 }
 
-TEST_F(TestUnitArgumentPacker, TestPackUnpackArg2) {
+TEST_F(TestUnitArgumentPacker, TestPackUnpackDoubleArg2) {
     assert(sizeof(buffer) >= TUAP_BUFFER_SIZE);
     double arg1 = 0;
     double arg2 = 0;
@@ -70,7 +71,7 @@ TEST_F(TestUnitArgumentPacker, TestPackUnpackArg2) {
     ASSERT_EQ(arg2, 66.66);
 }
 
-TEST_F(TestUnitArgumentPacker, TestPackUnpackArg3) {
+TEST_F(TestUnitArgumentPacker, TestPackUnpackDoubleArg3) {
     assert(sizeof(buffer) >= TUAP_BUFFER_SIZE);
     double arg1 = 0;
     double arg2 = 0;
@@ -82,6 +83,17 @@ TEST_F(TestUnitArgumentPacker, TestPackUnpackArg3) {
     ASSERT_EQ(arg1, 13.37);
     ASSERT_EQ(arg2, -66.66);
     ASSERT_EQ(arg3, -123.45);
+}
+
+TEST_F(TestUnitArgumentPacker, TestPackUnpackIntArg1) {
+    assert(sizeof(buffer) >= TUAP_BUFFER_SIZE);
+    const int n = 1337;
+    int arg = 0;
+
+    packer.pack(buffer, sizeof(buffer), n);
+    packer.unpack(buffer, sizeof(buffer), &arg);
+
+    ASSERT_EQ(arg, n);
 }
 
 TEST_F(TestUnitArgumentPacker, RespectBufferLimitsArg1) {
@@ -105,5 +117,14 @@ TEST_F(TestUnitArgumentPacker, RespectBufferLimitsArg3) {
     assert(sizeof(buffer) >= limit_bytes);
     set_buffer(buffer, sizeof(buffer));
     packer.pack(buffer, limit_bytes, 1234567.89, -3.1337, 0);
+    ASSERT_TRUE(is_buffer_intact(buffer, sizeof(buffer), limit_bytes));
+}
+
+TEST_F(TestUnitArgumentPacker, RespectBufferLimitsIntArg1) {
+    const size_t limit_bytes = sizeof(struct int_arg1_envelope_s);
+    const int n = 1337;
+    assert(sizeof(buffer) >= limit_bytes);
+    set_buffer(buffer, sizeof(buffer));
+    packer.pack(buffer, limit_bytes, n);
     ASSERT_TRUE(is_buffer_intact(buffer, sizeof(buffer), limit_bytes));
 }

@@ -2,6 +2,12 @@
 
 using namespace SIMUCOPTER;
 
+void ArgumentPacker::unpack(const void *src, size_t src_sz, int *arg1) const {
+    assert(src_sz >= sizeof(struct int_arg1_envelope_s));
+    struct int_arg1_envelope_s* envelope = (int_arg1_envelope_s*)src;
+    *arg1 = envelope->arg1;
+}
+
 void ArgumentPacker::unpack(const void *src, size_t src_sz, double *arg1) const {
     assert(src_sz >= sizeof(struct arg1_envelope_s));
     struct arg1_envelope_s* envelope = (arg1_envelope_s*)src;
@@ -21,6 +27,13 @@ void ArgumentPacker::unpack(const void *src, size_t src_sz, double *arg1, double
     *arg1 = envelope->arg1;
     *arg2 = envelope->arg2;
     *arg3 = envelope->arg3;
+}
+
+size_t ArgumentPacker::pack(void *dst, size_t dst_limit, int arg1) const {
+    assert(dst_limit >= sizeof(struct int_arg1_envelope_s));
+    struct int_arg1_envelope_s* envelope = (int_arg1_envelope_s*)dst;
+    envelope->arg1 = arg1;
+    return sizeof(struct int_arg1_envelope_s);
 }
 
 size_t ArgumentPacker::pack(void *dst, size_t dst_limit, double arg1) const {

@@ -15,6 +15,10 @@
 
 
 namespace SIMUCOPTER {
+    struct int_arg1_envelope_s {
+        int arg1;
+    };
+
     struct arg1_envelope_s {
         double arg1;
     };
@@ -32,12 +36,16 @@ namespace SIMUCOPTER {
 
     class ArgumentPacker {
     public:
+        ArgumentPacker() {}
+
         // void* --> arg1[, arg2[, arg3]]
+        void unpack(const void *src, size_t src_sz, int *arg1) const;
         void unpack(const void *src, size_t src_sz, double *arg1) const;
         void unpack(const void *src, size_t src_sz, double *arg1, double *arg2) const;
         void unpack(const void *src, size_t src_sz, double *arg1, double *arg2, double *arg3) const;
 
         // arg1[, arg2[, arg3]] --> void*
+        size_t pack(void *dst, size_t dst_limit, int arg1) const;
         size_t pack(void *dst, size_t dst_limit, double arg1) const;
         size_t pack(void *dst, size_t dst_limit, double arg1, double arg2) const;
         size_t pack(void *dst, size_t dst_limit, double arg1, double arg2, double arg3) const;
