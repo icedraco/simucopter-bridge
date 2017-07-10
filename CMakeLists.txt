@@ -19,6 +19,7 @@ set(SOURCE_FILES_BRIDGE
         bridge/BridgeMessage.cpp bridge/BridgeMessage.h bridge_test/TestUnitBridgeMessage.cpp
         bridge/BridgeService.cpp bridge/BridgeService.h bridge_test/TestUnitBridgeService.cpp
         bridge/ZmqBridgeMessageSerializer.cpp bridge/ZmqBridgeMessageSerializer.h bridge_test/TestUnitZmqMessageSerializer.cpp
+        bridge/ArgumentPacker.cpp bridge/ArgumentPacker.h bridge_test/TestUnitArgumentPacker.cpp
         bridge_test/test-common.h
         bridge_test/TestIntBridgeClientAndService.cpp)
 
