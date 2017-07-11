@@ -4,6 +4,7 @@
 
 #include <bridge/AbstractBridgeRequestHandler.h>
 #include <bridge/BridgeService.h>
+#include <bridge/ArgumentPacker.h>
 #include "SimuCopterMessage.h"
 #include "Copter.h"
 
