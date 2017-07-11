@@ -18,17 +18,21 @@ void SIMUCOPTER::BridgeClient::close(void) {
 
 double SIMUCOPTER::BridgeClient::request_double(int msgid) {
     assert(is_initialized());
+    char buffer[BRIDGE_MSG_DATA_CAPACITY];
     double result;
     BridgeMessage response = request(msgid);
-    response.load_data(&result, sizeof(result));
+    response.load_data(&buffer, BRIDGE_MSG_DATA_CAPACITY);
+    m_packer.unpack(buffer, BRIDGE_MSG_DATA_CAPACITY, &result);
     return result;
 }
 
 int SIMUCOPTER::BridgeClient::request_int(int msgid) {
     assert(is_initialized());
+    char buffer[BRIDGE_MSG_DATA_CAPACITY];
     int result;
     BridgeMessage response = request(msgid);
-    response.load_data(&result, sizeof(result));
+    response.load_data(&buffer, BRIDGE_MSG_DATA_CAPACITY);
+    m_packer.unpack(buffer, BRIDGE_MSG_DATA_CAPACITY, &result);
     return result;
 }
 
@@ -51,19 +55,16 @@ bool SIMUCOPTER::BridgeClient::send_command(int msgid, double arg1) {
 
 bool SIMUCOPTER::BridgeClient::send_command(int msgid, double arg1, double arg2) {
     assert(is_initialized());
-    struct {
-        double arg1;
-        double arg2;
-    } s_args;
 
+    // pack arguments into the buffer
+    char buffer_args[BRIDGE_MSG_DATA_CAPACITY];
+    size_t packed_sz = m_packer.pack(buffer_args, BRIDGE_MSG_DATA_CAPACITY, arg1, arg2);
     BridgeMessage cmd(BridgeMessageType::COMMAND, msgid);
-    s_args.arg1 = arg1;
-    s_args.arg2 = arg2;
+    cmd.set_data(&buffer_args, packed_sz);
 
-    cmd.set_data(&s_args, sizeof(s_args));
-    char buffer[1024];
-    size_t pkt_sz = m_serializer.serialize(cmd, buffer, 1024);
-    return m_socket_cmdPublish.send(buffer, pkt_sz, ZMQ_NOBLOCK) > 0;
+    char buffer_msg[1024];
+    size_t pkt_sz = m_serializer.serialize(cmd, buffer_msg, 1024);
+    return m_socket_cmdPublish.send(buffer_msg, pkt_sz, ZMQ_NOBLOCK) > 0;
 }
 
 

@@ -4,6 +4,7 @@
 
 #include "simucopter-bridge.h"
 #include "ZmqBridgeMessageSerializer.h"
+#include "ArgumentPacker.h"
 
 namespace SIMUCOPTER {
 
@@ -103,6 +104,7 @@ namespace SIMUCOPTER {
         const std::string m_reqAddrUrl; // address for request handler
         const std::string m_cmdAddrUrl; // address for command dispatcher
         const ZmqBridgeMessageSerializer m_serializer;
+        const ArgumentPacker m_packer;
 
         bool m_initialized = false;
 

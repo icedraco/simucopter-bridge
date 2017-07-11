@@ -4,6 +4,7 @@
 
 #include <bridge/AbstractBridgeRequestHandler.h>
 #include <bridge/BridgeService.h>
+#include <bridge/ArgumentPacker.h>
 #include "SimuCopterMessage.h"
 #include "Copter.h"
 
@@ -17,6 +18,9 @@ namespace SIMUCOPTER {
     public:
         void register_self(BridgeService& service);
         virtual void handle(const BridgeMessage& msg, BridgeMessage& response);
+
+    private:
+        const ArgumentPacker m_packer;
     };
 
 }
