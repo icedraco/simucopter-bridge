@@ -178,5 +178,6 @@ fi
 
 echo
 echo "### DEPLOYMENT COMPLETE"
+echo " # you may now copy the 'simucopter-matlab' folder to the PC with MATLAB"
 echo
 exit 0
