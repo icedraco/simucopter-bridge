@@ -12,7 +12,7 @@
 
 
 # expected location of ArduPilot
-ARDUPILOT_ROOT="/home/pi/ardupilot"
+ARDUPILOT_ROOT="${HOME}/ardupilot"
 
 # simucopter source and install files - you're supposed to be running it from
 # within such a folder.
@@ -20,7 +20,7 @@ SIMUCOPTER_ROOT=`pwd`
 
 # where simucopter shell scripts should be installed
 # (Required to be in sync with Simulink! DO NOT change!)
-SIMUCOPTER_TARGET="/home/pi/simucopter"
+SIMUCOPTER_TARGET="${HOME}/simucopter"
 
 APT_PACKAGES="
     python-matplotlib python-serial python-wxgtk2.8 python-wxtools python-lxml
@@ -137,15 +137,15 @@ if [ ! -d "${SIMUCOPTER_TARGET}" ]; then
 fi
 
 if [ ! -f "${SIMUCOPTER_TARGET}/kill-arducopter.sh" ]; then
-    ln -vs kill-arducopter.sh ${SIMUCOPTER_TARGET}/
+    ln -vs `pwd`/kill-arducopter.sh ${SIMUCOPTER_TARGET}/
 fi
 
 if [ ! -f "${SIMUCOPTER_TARGET}/run-arducopter.sh" ]; then
-    ln -vs run-arducopter.sh ${SIMUCOPTER_TARGET}/
+    ln -vs `pwd`/run-arducopter.sh ${SIMUCOPTER_TARGET}/
 fi
 
 if [ ! -f "${SIMUCOPTER_TARGET}/run-arducopter-navio.sh" ]; then
-    ln -vs run-arducopter-navio.sh ${SIMUCOPTER_TARGET}/
+    ln -vs `pwd`/run-arducopter-navio.sh ${SIMUCOPTER_TARGET}/
 fi
 
 chmod +x ${SIMUCOPTER_TARGET}/*.sh
