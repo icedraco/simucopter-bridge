@@ -1,0 +1,193 @@
+diff --git a/ArduCopter/Copter.h b/ArduCopter/Copter.h
+index 80ebea7..6e9e83a 100644
+--- a/ArduCopter/Copter.h
++++ b/ArduCopter/Copter.h
+@@ -771,6 +771,8 @@ private:
+     void delay(uint32_t ms);
+     bool acro_init(bool ignore_checks);
+     void acro_run();
++    bool simulink_init(bool ignore_checks);
++    void simulink_run();
+     void get_pilot_desired_angle_rates(int16_t roll_in, int16_t pitch_in, int16_t yaw_in, float &roll_out, float &pitch_out, float &yaw_out);
+     bool althold_init(bool ignore_checks);
+     void althold_run();
+diff --git a/ArduCopter/Parameters.cpp b/ArduCopter/Parameters.cpp
+index 8c7d740..29d0ef4 100644
+--- a/ArduCopter/Parameters.cpp
++++ b/ArduCopter/Parameters.cpp
+@@ -313,35 +313,35 @@ const AP_Param::Info Copter::var_info[] = {
+     // @Param: FLTMODE2
+     // @DisplayName: Flight Mode 2
+     // @Description: Flight mode when Channel 5 pwm is >1230, <= 1360
+-    // @Values: 0:Stabilize,1:Acro,2:AltHold,3:Auto,4:Guided,5:Loiter,6:RTL,7:Circle,9:Land,11:Drift,13:Sport,14:Flip,15:AutoTune,16:PosHold,17:Brake,18:Throw,19:Avoid_ADSB,20:Guided_NoGPS
++    // @Values: 0:Stabilize,1:Acro,2:AltHold,3:Auto,4:Guided,5:Loiter,6:RTL,7:Circle,9:Land,11:Drift,13:Sport,14:Flip,15:AutoTune,16:PosHold,17:Brake,18:Throw,19:Avoid_ADSB,20:Guided_NoGPS,66:Simulink
+     // @User: Standard
+     GSCALAR(flight_mode2, "FLTMODE2",               FLIGHT_MODE_2),
+ 
+     // @Param: FLTMODE3
+     // @DisplayName: Flight Mode 3
+     // @Description: Flight mode when Channel 5 pwm is >1360, <= 1490
+-    // @Values: 0:Stabilize,1:Acro,2:AltHold,3:Auto,4:Guided,5:Loiter,6:RTL,7:Circle,9:Land,11:Drift,13:Sport,14:Flip,15:AutoTune,16:PosHold,17:Brake,18:Throw,19:Avoid_ADSB,20:Guided_NoGPS
++    // @Values: 0:Stabilize,1:Acro,2:AltHold,3:Auto,4:Guided,5:Loiter,6:RTL,7:Circle,9:Land,11:Drift,13:Sport,14:Flip,15:AutoTune,16:PosHold,17:Brake,18:Throw,19:Avoid_ADSB,20:Guided_NoGPS,66:Simulink
+     // @User: Standard
+     GSCALAR(flight_mode3, "FLTMODE3",               FLIGHT_MODE_3),
+ 
+     // @Param: FLTMODE4
+     // @DisplayName: Flight Mode 4
+     // @Description: Flight mode when Channel 5 pwm is >1490, <= 1620
+-    // @Values: 0:Stabilize,1:Acro,2:AltHold,3:Auto,4:Guided,5:Loiter,6:RTL,7:Circle,9:Land,11:Drift,13:Sport,14:Flip,15:AutoTune,16:PosHold,17:Brake,18:Throw,19:Avoid_ADSB,20:Guided_NoGPS
++    // @Values: 0:Stabilize,1:Acro,2:AltHold,3:Auto,4:Guided,5:Loiter,6:RTL,7:Circle,9:Land,11:Drift,13:Sport,14:Flip,15:AutoTune,16:PosHold,17:Brake,18:Throw,19:Avoid_ADSB,20:Guided_NoGPS,66:Simulink
+     // @User: Standard
+     GSCALAR(flight_mode4, "FLTMODE4",               FLIGHT_MODE_4),
+ 
+     // @Param: FLTMODE5
+     // @DisplayName: Flight Mode 5
+     // @Description: Flight mode when Channel 5 pwm is >1620, <= 1749
+-    // @Values: 0:Stabilize,1:Acro,2:AltHold,3:Auto,4:Guided,5:Loiter,6:RTL,7:Circle,9:Land,11:Drift,13:Sport,14:Flip,15:AutoTune,16:PosHold,17:Brake,18:Throw,19:Avoid_ADSB,20:Guided_NoGPS
++    // @Values: 0:Stabilize,1:Acro,2:AltHold,3:Auto,4:Guided,5:Loiter,6:RTL,7:Circle,9:Land,11:Drift,13:Sport,14:Flip,15:AutoTune,16:PosHold,17:Brake,18:Throw,19:Avoid_ADSB,20:Guided_NoGPS,66:Simulink
+     // @User: Standard
+     GSCALAR(flight_mode5, "FLTMODE5",               FLIGHT_MODE_5),
+ 
+     // @Param: FLTMODE6
+     // @DisplayName: Flight Mode 6
+     // @Description: Flight mode when Channel 5 pwm is >=1750
+-    // @Values: 0:Stabilize,1:Acro,2:AltHold,3:Auto,4:Guided,5:Loiter,6:RTL,7:Circle,9:Land,11:Drift,13:Sport,14:Flip,15:AutoTune,16:PosHold,17:Brake,18:Throw,19:Avoid_ADSB,20:Guided_NoGPS
++    // @Values: 0:Stabilize,1:Acro,2:AltHold,3:Auto,4:Guided,5:Loiter,6:RTL,7:Circle,9:Land,11:Drift,13:Sport,14:Flip,15:AutoTune,16:PosHold,17:Brake,18:Throw,19:Avoid_ADSB,20:Guided_NoGPS,66:Simulink
+     // @User: Standard
+     GSCALAR(flight_mode6, "FLTMODE6",               FLIGHT_MODE_6),
+ 
+diff --git a/ArduCopter/defines.h b/ArduCopter/defines.h
+index a1fc301..22b933c 100644
+--- a/ArduCopter/defines.h
++++ b/ArduCopter/defines.h
+@@ -103,6 +103,8 @@ enum control_mode_t {
+     THROW =        18,  // throw to launch mode using inertial/GPS system, no pilot input
+     AVOID_ADSB =   19,  // automatic avoidance of obstacles in the macro scale - e.g. full-sized aircraft
+     GUIDED_NOGPS = 20,  // guided mode but only accepts attitude and altitude
++   
++    SIMULINK =     66,  // simulink flight mode
+ };
+ 
+ enum mode_reason_t {
+diff --git a/ArduCopter/flight_mode.cpp b/ArduCopter/flight_mode.cpp
+index 84977d4..a0b0d1f 100644
+--- a/ArduCopter/flight_mode.cpp
++++ b/ArduCopter/flight_mode.cpp
+@@ -25,6 +25,10 @@ bool Copter::set_mode(control_mode_t mode, mode_reason_t reason)
+     }
+ 
+     switch (mode) {
++        case SIMULINK:
++	    success = simulink_init(ignore_checks);
++	    break;
++	
+         case ACRO:
+             #if FRAME_CONFIG == HELI_FRAME
+                 success = heli_acro_init(ignore_checks);
+@@ -162,6 +166,10 @@ void Copter::update_flight_mode()
+     ahrs.getEkfControlLimits(ekfGndSpdLimit, ekfNavVelGainScaler);
+ 
+     switch (control_mode) {
++        case SIMULINK:
++            simulink_run();
++            break;
++
+         case ACRO:
+             #if FRAME_CONFIG == HELI_FRAME
+                 heli_acro_run();
+@@ -431,6 +439,9 @@ void Copter::notify_flight_mode(control_mode_t mode)
+ void Copter::print_flight_mode(AP_HAL::BetterStream *port, uint8_t mode)
+ {
+     switch (mode) {
++    case SIMULINK:
++        port->print("SIMULINK");
++	break;
+     case STABILIZE:
+         port->printf("STABILIZE");
+         break;
+diff --git a/ArduCopter/system.cpp b/ArduCopter/system.cpp
+index f3c6aee..e786c00 100644
+--- a/ArduCopter/system.cpp
++++ b/ArduCopter/system.cpp
+@@ -1,3 +1,4 @@
++#include "simucopter-arducopter.h"
+ #include "Copter.h"
+ #include "version.h"
+ 
+@@ -266,6 +267,9 @@ void Copter::init_ardupilot()
+     ins.set_hil_mode();
+ #endif
+ 
++    // initialize simucopter server
++    SIMUCOPTER::init_simucopter();
++
+     // read Baro pressure at ground
+     //-----------------------------
+     init_barometer(true);
+diff --git a/Tools/ardupilotwaf/boards.py b/Tools/ardupilotwaf/boards.py
+index 78e5a67..ecd9ab9 100644
+--- a/Tools/ardupilotwaf/boards.py
++++ b/Tools/ardupilotwaf/boards.py
+@@ -220,10 +220,12 @@ class sitl(Board):
+         if not cfg.env.DEBUG:
+             env.CXXFLAGS += [
+                 '-O3',
++                '-fexceptions',  # FIXME: THIS IS REQUIRED BY ZMQ.HPP FOR NOW
+             ]
+ 
+         env.LIB += [
+             'm',
++            'zmq',
+         ]
+ 
+         cfg.check_librt(env)
+@@ -232,6 +234,7 @@ class sitl(Board):
+         env.AP_LIBRARIES += [
+             'AP_HAL_SITL',
+             'SITL',
++            'bridge',
+         ]
+ 
+         if sys.platform == 'cygwin':
+diff --git a/libraries/AP_HAL_SITL/HAL_SITL_Class.cpp b/libraries/AP_HAL_SITL/HAL_SITL_Class.cpp
+index b0c1bde..4691ff8 100644
+--- a/libraries/AP_HAL_SITL/HAL_SITL_Class.cpp
++++ b/libraries/AP_HAL_SITL/HAL_SITL_Class.cpp
+@@ -16,6 +16,7 @@
+ #include "GPIO.h"
+ #include "SITL_State.h"
+ #include "Util.h"
++// #include "simucopter-server-sitl.h"
+ 
+ #include <AP_HAL_Empty/AP_HAL_Empty.h>
+ #include <AP_HAL_Empty/AP_HAL_Empty_Private.h>
+@@ -82,6 +83,9 @@ void HAL_SITL::run(int argc, char * const argv[], Callbacks* callbacks) const
+     analogin->init();
+ 
+     callbacks->setup();
++
++    //simucopter_sitl_init();
++
+     scheduler->system_initialized();
+ 
+     for (;;) {
+diff --git a/libraries/AP_HAL_SITL/system.cpp b/libraries/AP_HAL_SITL/system.cpp
+index 86ee6b6..2ff332c 100644
+--- a/libraries/AP_HAL_SITL/system.cpp
++++ b/libraries/AP_HAL_SITL/system.cpp
+@@ -3,6 +3,7 @@
+ 
+ #include <AP_HAL/AP_HAL.h>
+ #include <AP_HAL/system.h>
++// #include "simucopter-server-sitl.h"
+ 
+ #include "Scheduler.h"
+ 
+@@ -19,6 +20,7 @@ static struct {
+ void init()
+ {
+     gettimeofday(&state.start_time, nullptr);
++    //simucopter_sitl_init();  // TODO: THIS MOVED FROM system.cpp TO SITL CLASS
+ }
+ 
+ void panic(const char *errormsg, ...)
