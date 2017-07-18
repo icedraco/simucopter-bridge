@@ -55,6 +55,9 @@ do_install_ardupilot () {
 
 # this prepares the current install dir for deployment
 do_install_source_tree () {
+    echo "  > making all local scripts executable..."
+    chmod u+x ./*.sh
+
     echo "  > updating 'bridge' and 'simucopter' folders in simucopter-matlab..."
     pushd simucopter-matlab
     rm -vrf bridge simucopter
@@ -127,6 +130,25 @@ echo "  > SIMUCOPTER_ROOT:   ${SIMUCOPTER_ROOT}"
 echo "  > SIMUCOPTER_TARGET: ${SIMUCOPTER_TARGET}"
 echo "  > PATCH_ROOT:        ${PATCH_ROOT}"
 echo
+
+echo "  * Making sure simucopter scripts are accessible..."
+if [ ! -d "${SIMUCOPTER_TARGET}" ]; then
+    mkdir -p ${SIMUCOPTER_TARGET}
+fi
+
+if [ ! -f "${SIMUCOPTER_TARGET}/kill-arducopter.sh" ]; then
+    ln -vs kill-arducopter.sh ${SIMUCOPTER_TARGET}/
+fi
+
+if [ ! -f "${SIMUCOPTER_TARGET}/run-arducopter.sh" ]; then
+    ln -vs run-arducopter.sh ${SIMUCOPTER_TARGET}/
+fi
+
+if [ ! -f "${SIMUCOPTER_TARGET}/run-arducopter-navio.sh" ]; then
+    ln -vs run-arducopter-navio.sh ${SIMUCOPTER_TARGET}/
+fi
+
+chmod +x ${SIMUCOPTER_TARGET}/*.sh
 
 echo "  * Copying/linking SimuCopter files into ArduPilot..."
 echo "      > ArduCopter files..."
