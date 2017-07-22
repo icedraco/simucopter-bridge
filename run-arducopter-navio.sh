@@ -6,6 +6,9 @@
 ARDUPILOT_ROOT=/home/pi/ardupilot
 BOARD_TYPE=navio
 
+# Disable ASLR as a stability workaround
+su -c "echo 0 | tee /proc/sys/kernel/randomize_va_space"
+
 cd ${ARDUPILOT_ROOT}
 ./waf configure --board ${BOARD_TYPE} && \
 ./waf build --target bin/arducopter -j 4 && \
