@@ -1,4 +1,4 @@
-classdef Yaw_state < matlab.System 
+classdef Yaw_state < matlab.System   
 
    methods (Access = protected)
         
